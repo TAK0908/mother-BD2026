@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>古希御祝 御旅行御案内 — 尚子様</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+  :root{
+    --ink:#1C2B33;
+    --washi:#F5EFE1;
+    --washi-dark:#EAE0CB;
+    --gold:#B08D57;
+    --gold-soft:#B08D5766;
+    --vermilion:#9C3D34;
+    --koki-purple:#6B4C6E;
+    --line: rgba(176,141,87,0.35);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--washi);
+    color:var(--ink);
+    font-family:'Noto Sans JP', sans-serif;
+    font-weight:300;
+    line-height:1.9;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mincho{ font-family:'Shippori Mincho', serif; }
+
+  body::before{
+    content:"";
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(28,43,51,0.02) 0, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(176,141,87,0.05) 0, transparent 45%);
+  }
+
+  .hero{
+    position:relative;
+    background:
+      radial-gradient(ellipse at 50% -10%, #2E4057 0%, var(--ink) 55%, #12191E 100%);
+    color:var(--washi);
+    padding:72px 24px 88px;
+    text-align:center;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute; inset:10px;
+    border:1px solid var(--gold-soft);
+    pointer-events:none;
+  }
+  .invite-no{
+    font-size:12px; letter-spacing:0.25em; color:var(--gold); opacity:0;
+    margin-bottom:18px; transform:translateY(-24px);
+  }
+  .koki-badge{
+    display:inline-flex; align-items:center; gap:8px; padding:6px 18px;
+    border:1px solid var(--koki-purple); color:#D9C6DB; border-radius:999px;
+    font-size:12px; letter-spacing:0.18em; margin-bottom:28px;
+    opacity:0; transform:translateY(-24px);
+  }
+  .koki-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--koki-purple);}
+  .hero h1{
+    font-size:clamp(28px,5vw,46px); margin:0 0 10px; font-weight:600; letter-spacing:0.06em;
+    opacity:0; transform:translateY(-28px);
+  }
+  .hero .sub{
+    font-size:clamp(14px,2vw,17px); color:#CBD3D8; letter-spacing:0.1em; margin-bottom:36px;
+    opacity:0; transform:translateY(-24px);
+  }
+  .hero .lead{
+    max-width:640px; margin:0 auto; font-size:15px; color:#B9C2C8;
+    opacity:0; transform:translateY(-24px);
+  }
+  @keyframes textDrop{ from{opacity:0; transform:translateY(-24px);} to{opacity:1; transform:translateY(0);} }
+  .hero.reveal .invite-no{ animation:textDrop 2.2s cubic-bezier(.16,.84,.44,1) forwards 0s; }
+  .hero.reveal .koki-badge{ animation:textDrop 2.2s cubic-bezier(.16,.84,.44,1) forwards 1.2s; }
+  .hero.reveal h1{ animation:textDrop 2.4s cubic-bezier(.16,.84,.44,1) forwards 2.6s; }
+  .hero.reveal .sub{ animation:textDrop 2.4s cubic-bezier(.16,.84,.44,1) forwards 4.2s; }
+  .hero.reveal .lead{ animation:textDrop 2.4s cubic-bezier(.16,.84,.44,1) forwards 5.8s; }
+
+  .letter{
+    max-width:680px; margin:-40px auto 0; background:var(--washi);
+    border:1px solid var(--line); padding:40px 36px; position:relative; z-index:2;
+    box-shadow:0 20px 40px rgba(28,43,51,0.08);
+  }
+  .letter p{ margin:0 0 14px; font-size:15px; opacity:0; transform:translateY(-20px); }
+  .letter .sign{ text-align:right; font-family:'Shippori Mincho', serif; margin-top:20px; font-size:15px; }
+  .letter.reveal p:nth-of-type(1){ animation:textDrop 2s cubic-bezier(.16,.84,.44,1) forwards 8.4s; }
+  .letter.reveal p:nth-of-type(2){ animation:textDrop 2s cubic-bezier(.16,.84,.44,1) forwards 9.8s; }
+  .letter.reveal p:nth-of-type(3){ animation:textDrop 2.2s cubic-bezier(.16,.84,.44,1) forwards 11.2s; }
+  .letter.reveal p:nth-of-type(4){ animation:textDrop 2s cubic-bezier(.16,.84,.44,1) forwards 13.0s; }
+
+  .section-head{ text-align:center; max-width:560px; margin:88px auto 40px; padding:0 20px; }
+  .section-head .eyebrow{ font-size:12px; letter-spacing:0.3em; color:var(--gold); margin-bottom:10px; }
+  .section-head h2{ font-size:clamp(22px,3vw,30px); margin:0 0 12px; }
+  .section-head p{ color:#5b6a72; font-size:14px; }
+
+  .plans{
+    max-width:1120px; margin:0 auto; padding:0 24px 100px;
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:28px;
+  }
+
+  .date-picker{ max-width:480px; margin:0 auto 20px; padding:0 24px; }
+  .date-picker-inner{
+    background:#fff; border:1px solid var(--line); padding:32px 28px; text-align:center;
+  }
+  .date-picker-inner label{
+    display:block; font-size:12px; letter-spacing:.15em; color:var(--gold); margin-bottom:10px;
+  }
+  .date-picker-inner input[type="date"]{
+    font-family:'Noto Sans JP', sans-serif; font-size:16px; padding:10px 14px; width:100%;
+    border:1px solid var(--line); background:var(--washi); color:var(--ink); margin-bottom:14px;
+  }
+  .date-range{ font-size:13px; color:#5b6a72; margin-bottom:20px; min-height:20px; }
+  .date-range strong{ color:var(--ink); font-family:'Shippori Mincho', serif; }
+  .cta-primary{
+    width:100%; padding:14px; background:var(--ink); color:var(--washi); border:none;
+    font-family:'Noto Sans JP', sans-serif; font-size:14px; letter-spacing:.08em; cursor:pointer;
+    transition:background .25s ease, opacity .25s ease;
+  }
+  .cta-primary:disabled{ opacity:0.35; cursor:not-allowed; }
+  .cta-primary:not(:disabled):hover{ background:#0f171c; }
+  .card{
+    background:#fff; border:1px solid var(--line); display:flex; flex-direction:column;
+    transition:transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+    cursor:pointer; position:relative;
+  }
+  .card:hover{ transform:translateY(-6px); box-shadow:0 24px 40px rgba(28,43,51,0.12); border-color:var(--gold); }
+  .card-art{
+    height:170px; position:relative; overflow:hidden;
+    border-bottom:1px solid var(--line); background:var(--washi-dark);
+  }
+  .card-art img{
+    width:100%; height:100%; object-fit:cover; display:block;
+    filter:saturate(0.92) contrast(1.02);
+    transition:transform .5s ease;
+  }
+  .card:hover .card-art img{ transform:scale(1.06); }
+  .card-art::after{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(28,43,51,0) 55%, rgba(28,43,51,0.35) 100%);
+  }
+  .card-art .art-no{
+    position:absolute; top:10px; left:12px; z-index:2;
+    font-size:11px; letter-spacing:.2em; color:#fff;
+    background:rgba(28,43,51,0.55); padding:3px 10px; border:1px solid var(--gold-soft);
+  }
+  .card-body{ padding:26px 24px 28px; flex:1; display:flex; flex-direction:column;}
+  .card h3{ font-size:20px; margin:0 0 6px; font-family:'Shippori Mincho', serif; font-weight:600; }
+  .card .place{ font-size:12px; color:var(--vermilion); letter-spacing:0.08em; margin-bottom:14px;}
+  .card .desc{ font-size:13.5px; color:#495459; margin-bottom:16px; flex:1;}
+  .card ul{ list-style:none; padding:0; margin:0 0 20px; font-size:12.5px; color:#5b6a72;}
+  .card li{ padding-left:14px; position:relative; margin-bottom:6px;}
+  .card li::before{ content:"·"; position:absolute; left:0; color:var(--gold);}
+  .card .cta{
+    align-self:flex-start; border:1px solid var(--ink); background:transparent; color:var(--ink);
+    font-family:'Noto Sans JP', sans-serif; font-size:13px; letter-spacing:0.08em; padding:10px 20px;
+    cursor:pointer; transition:background .25s ease, color .25s ease;
+  }
+  .card .cta:hover{ background:var(--ink); color:var(--washi); }
+
+  footer{ text-align:center; padding:40px 20px 60px; font-size:12px; color:#8a949a; letter-spacing:0.05em; }
+
+  .overlay{
+    position:fixed; inset:0; background:rgba(18,25,30,0.7);
+    display:none; align-items:center; justify-content:center; padding:20px; z-index:50;
+  }
+  .overlay.active{ display:flex; }
+  .modal{
+    background:var(--washi); max-width:480px; width:100%; max-height:88vh; overflow-y:auto;
+    position:relative; border:1px solid var(--gold-soft); padding:0 0 32px;
+    animation:modalIn .35s ease both;
+  }
+  @keyframes modalIn{ from{opacity:0; transform:scale(.96) translateY(10px);} to{opacity:1; transform:scale(1) translateY(0);} }
+  .modal-art{ height:180px; position:relative; }
+  .modal-art img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .modal .close{
+    position:absolute; top:14px; right:16px; background:rgba(18,25,30,0.5); border:none;
+    color:#fff; font-size:18px; cursor:pointer; width:30px; height:30px; border-radius:50%;
+    line-height:1; z-index:3;
+  }
+  .modal-body{ padding:26px 32px 0; }
+  .modal h3{ font-family:'Shippori Mincho', serif; font-size:22px; margin:0 0 4px;}
+  .modal .place{ color:var(--vermilion); font-size:12px; letter-spacing:.08em; margin-bottom:16px;}
+  .modal .desc{ font-size:13.5px; color:#495459; margin-bottom:18px;}
+  .itinerary-block{ margin-bottom:22px; }
+  .itinerary-block .duration{
+    display:inline-block; font-size:11px; letter-spacing:.15em; color:var(--gold);
+    border:1px solid var(--gold-soft); padding:3px 10px; margin-bottom:12px;
+  }
+  .day-row{ display:flex; gap:14px; margin-bottom:10px; font-size:13px; }
+  .day-row .day-label{
+    flex:0 0 72px; font-family:'Shippori Mincho', serif; color:var(--ink); font-weight:600;
+  }
+  .day-row .day-label .day-date{
+    display:block; font-family:'Noto Sans JP', sans-serif; font-weight:400; font-size:10.5px;
+    color:var(--gold); letter-spacing:.02em; margin-top:2px;
+  }
+  .day-row .day-text{ color:#495459; }
+  .confirm-btn{
+    width:calc(100% - 64px); margin:0 32px 26px; padding:14px; background:var(--ink); color:var(--washi);
+    border:none; font-family:'Noto Sans JP', sans-serif; font-size:14px; letter-spacing:.1em;
+    cursor:pointer; transition:background .25s ease; display:block;
+  }
+  .confirm-btn:hover{ background:#0f171c; }
+
+  .ticket-overlay{
+    position:fixed; inset:0; background:rgba(18,25,30,0.82);
+    display:none; align-items:center; justify-content:center; padding:20px; z-index:60;
+  }
+  .ticket-overlay.active{ display:flex; }
+  .ticket{
+    background:var(--washi); max-width:480px; width:100%; max-height:90vh; overflow-y:auto;
+    padding:44px 36px 36px; position:relative; border:1px solid var(--gold); text-align:center;
+  }
+  .ticket .close{
+    position:absolute; top:14px; right:16px; background:none; border:none; font-size:20px;
+    color:#8a949a; cursor:pointer;
+  }
+  .ticket .label{ font-size:12px; letter-spacing:.3em; color:var(--gold); margin-bottom:10px;}
+  .ticket h3{ font-family:'Shippori Mincho', serif; font-size:24px; margin:0 0 4px;}
+  .ticket .sub{ font-size:13px; color:#5b6a72; margin-bottom:22px;}
+  .stamp-wrap{ position:relative; display:inline-flex; align-items:center; justify-content:center; margin:8px 0 26px; }
+  .stamp{
+    width:132px; height:132px; position:relative;
+    color:var(--vermilion);
+    transform:scale(2.4) rotate(-14deg); opacity:0;
+  }
+  .stamp .rings{
+    position:absolute; inset:0; filter:url(#hankoEdge);
+  }
+  .stamp .ring-outer{
+    position:absolute; inset:0; border-radius:50%; border:6px solid var(--vermilion);
+  }
+  .stamp .ring-inner{
+    position:absolute; inset:11px; border-radius:50%; border:2px solid var(--vermilion);
+  }
+  .stamp .kanji{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:'Shippori Mincho', serif; font-weight:700; font-size:40px; letter-spacing:8px;
+    writing-mode:vertical-rl; text-orientation:upright; color:var(--vermilion);
+  }
+  .stamp .grain{
+    position:absolute; inset:0; border-radius:50%;
+    background:
+      radial-gradient(circle at 22% 25%, rgba(255,255,255,0.55) 0, transparent 26%),
+      radial-gradient(circle at 78% 70%, rgba(255,255,255,0.45) 0, transparent 22%),
+      radial-gradient(circle at 55% 85%, rgba(255,255,255,0.4) 0, transparent 20%),
+      radial-gradient(circle at 15% 70%, rgba(255,255,255,0.35) 0, transparent 18%),
+      radial-gradient(circle at 85% 20%, rgba(255,255,255,0.35) 0, transparent 18%);
+    mix-blend-mode:screen;
+  }
+  .stamp.stamp-in{ animation:stampSlam .55s cubic-bezier(.2,1.4,.4,1) forwards; }
+  @keyframes stampSlam{
+    0%{ opacity:0; transform:scale(2.4) rotate(-14deg);}
+    60%{ opacity:1; transform:scale(0.92) rotate(-7deg);}
+    80%{ transform:scale(1.05) rotate(-9deg);}
+    100%{ opacity:1; transform:scale(1) rotate(-8deg);}
+  }
+  .ticket .itinerary-summary{
+    text-align:left; border-top:1px dashed var(--line); border-bottom:1px dashed var(--line);
+    padding:18px 0; margin:6px 0 20px; font-size:13px;
+  }
+
+  /* ---------- VIDEO GATE ---------- */
+  .video-gate{
+    position:fixed; inset:0; z-index:200;
+    background: radial-gradient(ellipse at 50% -10%, #2E4057 0%, var(--ink) 55%, #12191E 100%);
+    color:var(--washi);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:32px 24px; text-align:center;
+    transition:opacity .6s ease;
+  }
+  .video-gate.hidden{ opacity:0; pointer-events:none; }
+  .video-gate .invite-no{ margin-bottom:14px; }
+  .video-gate h2{
+    font-family:'Shippori Mincho', serif; font-size:clamp(22px,4vw,30px);
+    margin:0 0 22px; font-weight:600; letter-spacing:.06em;
+  }
+  .video-gate video{
+    width:100%; max-width:420px; max-height:60vh; background:#000;
+    border:1px solid var(--gold-soft); margin-bottom:24px;
+  }
+  .video-missing{
+    width:100%; max-width:420px; aspect-ratio:9/12; max-height:60vh;
+    border:1px dashed var(--gold-soft); margin-bottom:24px;
+    display:flex; align-items:center; justify-content:center;
+    color:#8a949a; font-size:13px; padding:24px; box-sizing:border-box;
+  }
+  .video-gate .gate-next{
+    max-width:280px; background:var(--washi); color:var(--ink); border:none;
+    padding:14px 30px; font-family:'Noto Sans JP', sans-serif; font-size:14px;
+    letter-spacing:.1em; cursor:pointer; transition:opacity .2s ease;
+  }
+  .video-gate .gate-next:hover{ opacity:.85; }
+
+  .ticket .itinerary-summary .day-row{ margin-bottom:8px; }
+  .ticket .msg{ font-size:13.5px; color:#495459; text-align:left; margin-bottom:22px;}
+  .email-btn{
+    display:inline-block; width:100%; padding:13px; background:var(--vermilion); color:#fff;
+    text-decoration:none; font-size:13.5px; letter-spacing:.08em; border:none; cursor:pointer;
+    box-sizing:border-box;
+  }
+  .email-btn:hover{ background:#82302a; }
+  .email-hint{ font-size:11px; color:#8a949a; margin-top:10px; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; }
+  }
+  @media (max-width:480px){ .letter{ padding:28px 22px; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute;">
+  <filter id="hankoEdge">
+    <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4" seed="11" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="7"/>
+  </filter>
+</svg>
+
+<div class="video-gate" id="videoGate">
+  <div class="invite-no">御 招 待 状 &nbsp;No. 070</div>
+  <h2 class="mincho">尚子様へ</h2>
+  <video id="letterVideo" controls playsinline>
+    <source src="video/message.mp4" type="video/mp4">
+  </video>
+  <div class="video-missing" id="videoMissingNote" style="display:none;">
+    (ここに、お祝いの動画メッセージが入ります)
+  </div>
+  <button class="gate-next" id="gateNextBtn">はじめる →</button>
+</div>
+
+<section class="hero">
+  <div class="invite-no">御 招 待 状 &nbsp;No. 070</div>
+  <div class="koki-badge"><span class="dot"></span>古希御祝 &nbsp;COMMEMORATIVE JOURNEY&nbsp;<span class="dot"></span></div>
+  <h1 class="mincho">尚子 様</h1>
+  <div class="sub">古希、まことにおめでとうございます</div>
+  <p class="lead">この度は、古希のお祝いに素敵な時間を贈りたいと思います。</p>
+</section>
+
+<div class="letter">
+  <p>尚子様</p>
+  <p>古希という大きな節目を迎えられたこと、心よりお祝い申し上げます。</p>
+  <p>いつも本当にありがとう。<br>この度は、古希のお祝いに素敵な時間を贈りたいと思います。<br>都合のいい日程と行き先を、どうぞご自身で選んでください。</p>
+  <p class="sign">— 隆行・恵里香より</p>
+</div>
+
+<div class="section-head">
+  <div class="eyebrow mincho">STEP 1</div>
+  <h2 class="mincho">まず、日程を選ぶ</h2>
+  <p>二泊三日でご用意しています。出発日を選んでください。</p>
+</div>
+
+<div class="date-picker" id="datePicker">
+  <div class="date-picker-inner">
+    <label for="tripStart">出発日</label>
+    <input type="date" id="tripStart">
+    <div class="date-range" id="dateRange">出発日を選ぶと、帰着日が自動で表示されます。</div>
+    <button class="cta-primary" id="dateNextBtn" disabled>この日程で行き先を選ぶ →</button>
+  </div>
+</div>
+
+<div class="section-head" id="step2Head" style="display:none;">
+  <div class="eyebrow mincho">STEP 2 · <span id="chosenDateLabel"></span></div>
+  <h2 class="mincho">行き先を選ぶ</h2>
+  <p>温泉とやすらぎ、歴史とまち歩き — 十五の行き先をご覧ください。</p>
+</div>
+
+<div class="plans" id="plans" style="display:none;"></div>
+
+<footer>これは実際の予約サイトではなく、お誕生日プレゼントとしてお作りしたご案内です。<br>写真: Wikimedia Commons(クリエイティブ・コモンズ・ライセンス)</footer>
+
+<div class="overlay" id="overlay">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<div class="ticket-overlay" id="ticketOverlay">
+  <div class="ticket" id="ticketContent"></div>
+</div>
+
+<script>
+/* ===== 動画ゲート ===== */
+const videoGate = document.getElementById('videoGate');
+const letterVideo = document.getElementById('letterVideo');
+const videoMissingNote = document.getElementById('videoMissingNote');
+const gateNextBtn = document.getElementById('gateNextBtn');
+
+let videoOk = false;
+letterVideo.addEventListener('loadeddata', ()=>{ videoOk = true; });
+letterVideo.addEventListener('error', showMissingVideo, true);
+letterVideo.querySelector('source').addEventListener('error', showMissingVideo);
+setTimeout(()=>{ if(!videoOk && letterVideo.readyState === 0) showMissingVideo(); }, 2500);
+
+function showMissingVideo(){
+  if (videoOk) return;
+  letterVideo.style.display = 'none';
+  videoMissingNote.style.display = 'flex';
+}
+
+gateNextBtn.addEventListener('click', ()=>{
+  try{ letterVideo.pause(); }catch(e){}
+  videoGate.classList.add('hidden');
+  setTimeout(()=>{ videoGate.style.display = 'none'; }, 650);
+  setTimeout(()=>{
+    document.querySelector('.hero').classList.add('reveal');
+    document.querySelector('.letter').classList.add('reveal');
+  }, 200);
+});
+
+let selectedTrip = null; // {startStr, endStr, label}
+
+function formatJPDate(d){
+  const w = ["日","月","火","水","木","金","土"][d.getDay()];
+  return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日(${w})`;
+}
+
+const tripStartInput = document.getElementById('tripStart');
+const dateRangeEl = document.getElementById('dateRange');
+const dateNextBtn = document.getElementById('dateNextBtn');
+
+const todayStr = new Date().toISOString().split('T')[0];
+tripStartInput.min = todayStr;
+
+tripStartInput.addEventListener('change', ()=>{
+  if(!tripStartInput.value){ dateNextBtn.disabled = true; return; }
+  const start = new Date(tripStartInput.value + "T00:00:00");
+  const end = new Date(start);
+  end.setDate(end.getDate() + 2);
+  const label = `${formatJPDate(start)} 〜 ${formatJPDate(end)}(二泊三日)`;
+  dateRangeEl.innerHTML = `<strong>${label}</strong>`;
+  selectedTrip = { start, end, label };
+  dateNextBtn.disabled = false;
+});
+
+dateNextBtn.addEventListener('click', ()=>{
+  document.getElementById('chosenDateLabel').textContent = selectedTrip.label;
+  document.getElementById('step2Head').style.display = '';
+  document.getElementById('plans').style.display = '';
+  document.getElementById('step2Head').scrollIntoView({behavior:'smooth', block:'start'});
+});
+
+/* ===== EmailJS 設定 =====
+   1) https://www.emailjs.com/ で無料アカウント作成
+   2) Email Services → お使いのメール(Gmail等)を接続 → Service ID を取得
+   3) Email Templates → テンプレート作成 → 変数は to_email / subject / message / from_name を使用 → Template ID を取得
+   4) Account → General → Public Key を取得
+   5) 下の3つを置き換えてください
+*/
+const EMAILJS_PUBLIC_KEY  = "HEOiATU7F5OgLD-kK";
+const EMAILJS_SERVICE_ID  = "service_kn4rlxn";
+const EMAILJS_TEMPLATE_ID = "template_fu6btvh";
+const NOTIFY_TO_EMAIL     = "zevester@yahoo.co.jp";
+const NOTIFY_FROM_NAME    = "隆行・恵里香";
+
+let emailjsReady = false;
+try{
+  if (window.emailjs && EMAILJS_PUBLIC_KEY !== "YOUR_PUBLIC_KEY") {
+    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+    emailjsReady = true;
+  }
+}catch(e){ console.warn("EmailJS init skipped:", e); }
+
+const PLANS = [
+  {
+    no:"01", place:"京都・嵐山", title:"竹林と老舗旅館の旅",
+    desc:"竹林の道を歩き、天龍寺の庭を眺めたあと、渡月橋を望む老舗旅館の温泉でゆっくりと。",
+    points:["竹林の道・散策", "天龍寺 庭園拝観", "渡月橋を望む温泉旅館", "嵯峨野トロッコ列車"],
+    img:"https://commons.wikimedia.org/wiki/Special:FilePath/2021_Sagano_Bamboo_forest_in_Arashiyama,_Kyoto,_Japan.jpg?width=800",
+    days:[
+      {label:"1日目", text:"<strong>午前:</strong>仙台より新幹線・在来線で移動。<strong>午後:</strong>嵐山に到着し、野宮神社から竹林の道を散策。渡月橋のたもとを歩く。<strong>夜:</strong>渡月橋を望む老舗旅館にチェックイン、京懐石と温泉でゆっくり。"},
+      {label:"2日目", text:"<strong>午前:</strong>天龍寺の庭園を拝観。<strong>午後:</strong>嵯峨野トロッコ列車で保津峡の景色を楽しみ、祇園・清水寺周辺をまち歩き。<strong>夜:</strong>旅館に戻り、温泉と会席料理でゆったり。"},
+      {label:"3日目", text:"<strong>午前:</strong>伏見稲荷大社を参拝し、千本鳥居を歩く。<strong>午後:</strong>京都駅周辺でお土産選び。<strong>夜:</strong>仙台へ帰路。"}
+    ]
+  },
+  {
+    no:"02", place:"金沢", title:"兼六園とひがし茶屋街の旅",
+    desc:"日本三名園のひとつ兼六園を歩き、格子戸の連なるひがし茶屋街で加賀の文化に触れる旅。",
+    points:["兼六園 散策", "ひがし茶屋街 まち歩き", "加賀温泉郷の宿", "近江町市場で海鮮"],
+    img:"https://commons.wikimedia.org/wiki/Special:FilePath/131109_Kenrokuen_Kanazawa_Ishikawa_pref_Japan01s3.jpg?width=800",
+    days:[
+      {label:"1日目", text:"<strong>午前:</strong>仙台より移動。<strong>午後:</strong>兼六園を散策し、金沢城公園へ。<strong>夜:</strong>加賀温泉郷の宿へチェックインし、加賀料理と温泉でくつろぐ。"},
+      {label:"2日目", text:"<strong>午前:</strong>ひがし茶屋街をまち歩き、金箔体験も。<strong>午後:</strong>21世紀美術館を鑑賞し、近江町市場で海鮮丼を味わう。<strong>夜:</strong>宿の温泉でゆったり。"},
+      {label:"3日目", text:"<strong>午前:</strong>妙立寺(忍者寺)を見学。<strong>午後:</strong>長町武家屋敷跡を歩く。<strong>夜:</strong>仙台へ帰路。"}
+    ]
+  },
+  {
+    no:"03", place:"草津温泉・群馬", title:"名湯 草津のやすらぎ旅",
+    desc:"日本三名泉のひとつ、湯畑を中心とした温泉街をそぞろ歩き。源泉かけ流しの湯にゆっくり浸かる旅。",
+    points:["湯畑 散策", "源泉かけ流しの温泉宿", "温泉街の食べ歩き", "湯もみショー"],
+    img:"https://commons.wikimedia.org/wiki/Special:FilePath/Kusatsu_Yubatake,_Gunma_02.jpg?width=800",
+    days:[
+      {label:"1日目", text:"<strong>午前:</strong>仙台より移動。<strong>午後:</strong>湯畑周辺を散策し、立ち上る湯けむりを眺める。<strong>夜:</strong>源泉かけ流しの温泉宿にチェックインし、上州の会席料理を。"},
+      {label:"2日目", text:"<strong>午前:</strong>湯もみショーを見学。<strong>午後:</strong>西の河原公園を散歩し、露天風呂で外気浴。<strong>夜:</strong>温泉街を食べ歩き、複数の共同湯で湯めぐり。"},
+      {label:"3日目", text:"<strong>午前:</strong>地元カフェでひと休み。<strong>午後:</strong>お土産選び。<strong>夜:</strong>仙台へ帰路。"}
+    ]
+  },
+  {
+    no:"04", place:"由布院・大分", title:"由布岳を望む静かな湯宿",
+    desc:"金鱗湖のほとりを歩き、由布岳を望む静かな一軒宿の露天風呂で、山の空気と共に過ごす旅。",
+    points:["金鱗湖 散策", "由布岳を望む露天風呂", "湯の坪街道 まち歩き", "由布院美術館めぐり"],
+    img:"https://commons.wikimedia.org/wiki/Special:FilePath/Lake_Kinrin_in_Yufuin,_Oita_-_Aug_24,_2018_(1).jpg?width=800",
+    days:[
+      {label:"1日目", text:"<strong>午前:</strong>仙台より空路・陸路で移動。<strong>午後:</strong>金鱗湖を散策し、湯の坪街道でまち歩き。<strong>夜:</strong>由布岳を望む一軒宿にチェックイン、露天風呂と地の食材の会席を。"},
+      {label:"2日目", text:"<strong>午前:</strong>由布岳を眺めながら軽いハイキング。<strong>午後:</strong>由布院美術館やギャラリーをめぐる。<strong>夜:</strong>宿の露天風呂でゆったり過ごす。"},
+      {label:"3日目", text:"<strong>午前:</strong>地元市場を覗く。<strong>午後:</strong>宇奈岐日女神社を参拝。<strong>夜:</strong>仙台へ帰路。"}
+    ]
+  },
+  {
+    no:"05", place:"松江・出雲", title:"出雲大社と玉造温泉の旅",
+    desc:"縁結びの社・出雲大社に詣で、日本三美人の湯といわれる玉造温泉で旅の疲れを癒す旅。",
+    points:["出雲大社 参拝", "玉造温泉(美人の湯)", "松江城 まち歩き", "足立美術館鑑賞"],
+    img:"https://commons.wikimedia.org/wiki/Special:FilePath/Izumo-taisha_Shrine,_Izumo_City,_Shimane_Prefecture,_September_2014.jpg?width=800",
+    days:[
+      {label:"1日目", text:"<strong>午前:</strong>仙台より移動。<strong>午後:</strong>出雲大社を参拝し、稲佐の浜まで足をのばす。<strong>夜:</strong>玉造温泉の宿にチェックインし、美人の湯と出雲そばを。"},
+      {label:"2日目", text:"<strong>午前:</strong>玉造温泉でゆったり過ごす。<strong>午後:</strong>松江城と堀川めぐりを楽しむ。<strong>夜:</strong>宿でもう一度温泉を堪能。"},
+      {label:"3日目", text:"<strong>午前:</strong>足立美術館で日本庭園を鑑賞。<strong>午後:</strong>宍道湖の景色を眺めて過ごす。<strong>夜:</strong>仙台へ帰路。"}
+    ]
+  },
+  {
+    no:"06", place:"銀山温泉・山形", title:"大正浪漫の湯宿町",
+    desc:"ガス灯とレトロな木造旅館が川沿いに並ぶ、大正ロマン漂う温泉街をそぞろ歩く旅。",
+    points:["銀山川沿いの温泉街散策", "ガス灯の灯る夜景", "白銀の滝", "尾花沢の郷土料理"],
+    img:"https://commons.wikimedia.org/wiki/Special:FilePath/Ginzan_Onsen_in_autumn_2018.jpg?width=800",
+    days:[
+      {label:"1日目", text:"<strong>午前:</strong>仙台より新幹線・在来線で尾花沢方面へ移動。<strong>午後:</strong>銀山温泉に到着し、川沿いのレトロな木造旅館が並ぶ町並みを散策。<strong>夜:</strong>老舗旅館にチェックインし、ガス灯が灯る幻想的な夜景を眺めながら温泉と郷土料理を。"},
+      {label:"2日目", text:"<strong>午前:</strong>白銀の滝まで散歩し、清流の空気を楽しむ。<strong>午後:</strong>共同浴場やカフェをめぐりながらのんびり過ごす。<strong>夜:</strong>宿の温泉でゆったり、山形の地酒とともに夕食。"},
+      {label:"3日目", text:"<strong>午前:</strong>温泉街で最後の散策とお土産選び。<strong>午後:</strong>尾花沢の名物そばを味わう。<strong>夜:</strong>仙台へ帰路。"}
+    ]
+  },
+  {
+    no:"07", place:"城崎温泉・兵庫", title:"外湯めぐりと文学の湯",
+    desc:"柳並木の川沿いに七つの外湯が並ぶ、志賀直哉ゆかりの情緒あふれる温泉街をゆかたで歩く旅。",
+    points:["七つの外湯めぐり", "ゆかたでまち歩き", "柳並木の温泉街", "但馬の海の幸"],
+    img:"https://commons.wikimedia.org/wiki/Special:FilePath/Kinosaki_onsen02_1920.jpg?width=800",
+    days:[
+      {label:"1日目", text:"<strong>午前:</strong>仙台より移動。<strong>午後:</strong>城崎温泉に到着し、柳並木の川沿いをゆかた姿で散策。<strong>夜:</strong>宿にチェックインし、外湯の一つでのんびり。但馬牛や松葉ガニなど海の幸の夕食。"},
+      {label:"2日目", text:"<strong>午前:</strong>ロープウェイで温泉寺・城崎山頂公園へ。<strong>午後:</strong>七つの外湯を好きなだけめぐる外湯めぐり。<strong>夜:</strong>射的やお土産店をひやかしながら夜のまち歩き。"},
+      {label:"3日目", text:"<strong>午前:</strong>最後にもう一つ外湯へ。<strong>午後:</strong>城崎文芸館(志賀直哉ゆかり)を見学。<strong>夜:</strong>仙台へ帰路。"}
+    ]
+  },
+  {
+    no:"08", place:"別府温泉・大分", title:"地獄めぐりと湯けむりの旅",
+    desc:"街のいたる所から湯けむりが立ちのぼる日本一の温泉湧出量を誇る町で、色とりどりの「地獄」をめぐる旅。",
+    points:["別府地獄めぐり(海地獄ほか)", "竹瓦温泉の砂湯", "湯けむり展望", "とり天など郷土料理"],
+    img:"https://commons.wikimedia.org/wiki/Special:FilePath/Umi_Jigoku_(Sea_Hell)_in_Beppu.jpg?width=800",
+    days:[
+      {label:"1日目", text:"<strong>午前:</strong>仙台より空路で移動。<strong>午後:</strong>別府に到着し、市内のいたる所から立ちのぼる湯けむりの景色を楽しむ。<strong>夜:</strong>宿にチェックインし、とり天など大分の郷土料理と温泉を。"},
+      {label:"2日目", text:"<strong>午前:</strong>別府地獄めぐり(海地獄・血の池地獄など)を観光。<strong>午後:</strong>竹瓦温泉で名物の砂湯体験。<strong>夜:</strong>湯けむり展望台から夜景を眺める。"},
+      {label:"3日目", text:"<strong>午前:</strong>地元市場でお土産選び。<strong>午後:</strong>のんびり宿で過ごす。<strong>夜:</strong>仙台へ帰路。"}
+    ]
+  },
+  {
+    no:"09", place:"道後温泉・愛媛", title:"日本最古の湯と松山城の旅",
+    desc:"三千年の歴史を持つ日本最古の温泉といわれる道後温泉本館と、四国随一の名城・松山城をめぐる旅。",
+    points:["道後温泉本館", "松山城 見学", "坊っちゃん列車", "道後商店街の食べ歩き"],
+    img:"https://commons.wikimedia.org/wiki/Special:FilePath/Dogo_onsen.JPG?width=800",
+    days:[
+      {label:"1日目", text:"<strong>午前:</strong>仙台より空路で移動。<strong>午後:</strong>道後温泉に到着し、道後商店街を食べ歩き。<strong>夜:</strong>宿にチェックインし、日本最古と伝わる道後温泉本館の湯を楽しむ。"},
+      {label:"2日目", text:"<strong>午前:</strong>坊っちゃん列車に乗って松山城へ。<strong>午後:</strong>松山城の天守から瀬戸内海を一望。<strong>夜:</strong>宿でゆったり、瀬戸内の海の幸を味わう。"},
+      {label:"3日目", text:"<strong>午前:</strong>道後の湯神社を参拝。<strong>午後:</strong>お土産選び。<strong>夜:</strong>仙台へ帰路。"}
+    ]
+  },
+  {
+    no:"10", place:"登別温泉・北海道", title:"地獄谷と大自然の湯",
+    desc:"火山が生み出した「地獄谷」の荒々しい景観と、北海道有数の湯量を誇る温泉地でゆっくり過ごす旅。",
+    points:["地獄谷 散策", "大湯沼川天然足湯", "クマ牧場", "北海道の海鮮料理"],
+    img:"https://commons.wikimedia.org/wiki/Special:FilePath/Noboribetsu_hot_spring_jigokudani.JPG?width=800",
+    days:[
+      {label:"1日目", text:"<strong>午前:</strong>仙台より空路で移動。<strong>午後:</strong>登別に到着し、地獄谷の荒々しい火山地形を散策。<strong>夜:</strong>宿にチェックインし、北海道の海鮮料理と温泉を。"},
+      {label:"2日目", text:"<strong>午前:</strong>大湯沼川天然足湯でのんびり。<strong>午後:</strong>のぼりべつクマ牧場を見学。<strong>夜:</strong>宿の大浴場でゆっくり過ごす。"},
+      {label:"3日目", text:"<strong>午前:</strong>温泉街でお土産選び。<strong>午後:</strong>のんびり過ごす。<strong>夜:</strong>仙台へ帰路。"}
+    ]
+  },
+  {
+    no:"11", place:"日光・鬼怒川温泉・栃木", title:"世界遺産の社寺と鬼怒川の湯",
+    desc:"世界遺産・日光東照宮の絢爛な陽明門に詣で、鬼怒川渓谷を望む温泉宿でゆっくり過ごす旅。",
+    points:["日光東照宮 参拝", "陽明門 見学", "鬼怒川渓谷の温泉宿", "華厳の滝"],
+    img:"https://commons.wikimedia.org/wiki/Special:FilePath/Nikko_Tosho-gu_Yomeimon_Gate.jpg?width=800",
+    days:[
+      {label:"1日目", text:"<strong>午前:</strong>仙台より新幹線・在来線で移動。<strong>午後:</strong>日光東照宮を参拝し、絢爛豪華な陽明門を見学。<strong>夜:</strong>鬼怒川渓谷を望む温泉宿にチェックイン、渓谷の景色とともに夕食。"},
+      {label:"2日目", text:"<strong>午前:</strong>華厳の滝と中禅寺湖を観光。<strong>午後:</strong>いろは坂の景色を楽しみながらのんびりドライブ。<strong>夜:</strong>宿の温泉でゆったり過ごす。"},
+      {label:"3日目", text:"<strong>午前:</strong>鬼怒川温泉街を散策。<strong>午後:</strong>お土産選び。<strong>夜:</strong>仙台へ帰路。"}
+    ]
+  },
+  {
+    no:"12", place:"飛騨高山・岐阜", title:"古い町並みと飛騨の湯",
+    desc:"「小京都」と呼ばれる飛騨高山の古い町並みを歩き、奥飛騨の温泉宿で山あいの静けさを味わう旅。",
+    points:["古い町並み(三町) 散策", "高山陣屋 見学", "朝市めぐり", "奥飛騨温泉郷の宿"],
+    img:"https://commons.wikimedia.org/wiki/Special:FilePath/Takayama_Old_Town_(Sanmachi_Suji)_(35819349621).jpg?width=800",
+    days:[
+      {label:"1日目", text:"<strong>午前:</strong>仙台より新幹線・特急で移動。<strong>午後:</strong>高山に到着し、格子戸の連なる古い町並み(三町)を散策。<strong>夜:</strong>奥飛騨温泉郷の宿にチェックインし、飛騨牛と温泉を楽しむ。"},
+      {label:"2日目", text:"<strong>午前:</strong>宮川朝市で地元の野菜やお漬物を見て回る。<strong>午後:</strong>高山陣屋を見学し、飛騨の歴史に触れる。<strong>夜:</strong>宿の露天風呂で山あいの星空を眺める。"},
+      {label:"3日目", text:"<strong>午前:</strong>さるぼぼグッズなどお土産選び。<strong>午後:</strong>のんびり温泉街を歩く。<strong>夜:</strong>仙台へ帰路。"}
+    ]
+  },
+  {
+    no:"13", place:"鎌倉・神奈川", title:"古都鎌倉と海辺の湯めぐり",
+    desc:"鶴岡八幡宮や大仏を詣で、江ノ電に揺られて江の島へ。海辺の湯にも浸かる、歴史と潮風の旅。",
+    points:["鶴岡八幡宮 参拝", "高徳院(鎌倉大仏)", "江ノ電で江の島へ", "稲村ヶ崎温泉"],
+    img:"https://commons.wikimedia.org/wiki/Special:FilePath/The_Great_Buddha_of_Kamakura_(Daibutsu).jpg?width=800",
+    days:[
+      {label:"1日目", text:"<strong>午前:</strong>仙台より新幹線で移動。<strong>午後:</strong>鶴岡八幡宮を参拝し、小町通りを食べ歩き。<strong>夜:</strong>稲村ヶ崎温泉でひと風呂浴びてから宿にチェックイン。"},
+      {label:"2日目", text:"<strong>午前:</strong>高徳院の鎌倉大仏と長谷寺を参拝。<strong>午後:</strong>江ノ電に揺られて江の島へ、江島神社を参拝。<strong>夜:</strong>宿でしらす料理を味わい、ゆったり過ごす。"},
+      {label:"3日目", text:"<strong>午前:</strong>北鎌倉の建長寺・円覚寺を参拝。<strong>午後:</strong>竹の庭で知られる報国寺を散策。<strong>夜:</strong>仙台へ帰路。"}
+    ]
+  },
+  {
+    no:"14", place:"川越・秩父", title:"小江戸の町並みと秩父の湯",
+    desc:"蔵造りの町並みが残る「小江戸」川越を歩き、秩父の渓谷と温泉でゆったり過ごす旅。",
+    points:["蔵造りの町並み・時の鐘", "菓子屋横丁", "長瀞ライン下り", "秩父の温泉宿"],
+    img:"https://commons.wikimedia.org/wiki/Special:FilePath/KashiyaYokocho_Kawagoe.JPG?width=800",
+    days:[
+      {label:"1日目", text:"<strong>午前:</strong>仙台より移動。<strong>午後:</strong>川越に到着し、蔵造りの町並みと時の鐘、菓子屋横丁を散策。<strong>夜:</strong>川越氷川神社を参拝し、宿にチェックイン。"},
+      {label:"2日目", text:"<strong>午前:</strong>秩父へ移動し、長瀞でライン下り(舟下り)を楽しむ。<strong>午後:</strong>秩父神社を参拝し、みそポテトなど郷土料理を味わう。<strong>夜:</strong>秩父の温泉宿でゆったり過ごす。"},
+      {label:"3日目", text:"<strong>午前:</strong>三峯神社を参拝、または羊山公園を散策。<strong>午後:</strong>お土産選び。<strong>夜:</strong>仙台へ帰路。"}
+    ]
+  },
+  {
+    no:"15", place:"富士五湖・河口湖", title:"富士山を望む絶景と湯の旅",
+    desc:"新倉山浅間公園から五重塔越しの富士山を望み、河口湖畔の温泉宿で富士の裾野をゆっくり味わう旅。",
+    points:["新倉山浅間公園(忠霊塔)", "河口湖畔の散策", "忍野八海", "河口湖温泉の宿"],
+    img:"https://commons.wikimedia.org/wiki/Special:FilePath/Chureito_Pagoda_and_Mount_Fuji.jpg?width=800",
+    days:[
+      {label:"1日目", text:"<strong>午前:</strong>仙台より移動。<strong>午後:</strong>新倉山浅間公園に登り、忠霊塔と富士山を望む絶景を楽しむ。<strong>夜:</strong>河口湖温泉の宿にチェックインし、富士を眺めながら温泉と会席料理を。"},
+      {label:"2日目", text:"<strong>午前:</strong>河口湖畔の大石公園を散策。<strong>午後:</strong>忍野八海や河口湖オルゴールの森を訪れる。<strong>夜:</strong>宿の露天風呂でゆったり過ごす。"},
+      {label:"3日目", text:"<strong>午前:</strong>富岳風穴・鳴沢氷穴を見学。<strong>午後:</strong>お土産選び。<strong>夜:</strong>仙台へ帰路。"}
+    ]
+  }
+];
+
+
+const plansEl = document.getElementById('plans');
+PLANS.forEach((p, i)=>{
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <div class="card-art">
+      <span class="art-no">PLAN ${p.no}</span>
+      <img src="${p.img}" alt="${p.place}" loading="lazy">
+    </div>
+    <div class="card-body">
+      <div class="place">${p.place}</div>
+      <h3 class="mincho">${p.title}</h3>
+      <p class="desc">${p.desc}</p>
+      <ul>${p.points.map(pt=>`<li>${pt}</li>`).join('')}</ul>
+      <button class="cta" data-i="${i}">くわしく見る</button>
+    </div>
+  `;
+  card.querySelector('.cta').addEventListener('click', (e)=>{ e.stopPropagation(); openModal(i); });
+  card.addEventListener('click', ()=>openModal(i));
+  plansEl.appendChild(card);
+});
+
+function shortJPDate(d){
+  const w = ["日","月","火","水","木","金","土"][d.getDay()];
+  return `${d.getMonth()+1}月${d.getDate()}日(${w})`;
+}
+
+function dayRowsHtml(days){
+  return days.map((d,idx)=>{
+    let dateStr = '';
+    if (selectedTrip){
+      const dt = new Date(selectedTrip.start);
+      dt.setDate(dt.getDate() + idx);
+      dateStr = `<span class="day-date">${shortJPDate(dt)}</span>`;
+    }
+    return `<div class="day-row"><div class="day-label">${d.label}${dateStr}</div><div class="day-text">${d.text}</div></div>`;
+  }).join('');
+}
+
+function openModal(i){
+  const p = PLANS[i];
+  const modal = document.getElementById('modalContent');
+  modal.innerHTML = `
+    <div class="modal-art">
+      <button class="close" onclick="closeModal()">×</button>
+      <img src="${p.img}" alt="${p.place}">
+    </div>
+    <div class="modal-body">
+      <div class="place">${p.place}</div>
+      <h3 class="mincho">${p.title}</h3>
+      <p class="desc">${p.desc}</p>
+      <div class="itinerary-block">
+        <span class="duration">二泊三日 ・ ${selectedTrip ? selectedTrip.label : ''}</span>
+        ${dayRowsHtml(p.days)}
+      </div>
+    </div>
+    <button class="confirm-btn" onclick="showConfirmStep(${i})">この旅を選ぶ</button>
+  `;
+  document.getElementById('overlay').classList.add('active');
+}
+
+function showConfirmStep(i){
+  const p = PLANS[i];
+  const modal = document.getElementById('modalContent');
+  modal.innerHTML = `
+    <div class="modal-body" style="padding-top:32px;">
+      <div class="place">${p.place}</div>
+      <h3 class="mincho">${p.title}</h3>
+      <p class="desc" style="margin-top:14px;">${selectedTrip ? selectedTrip.label : ''}<br>このプランで決定してよろしいですか?</p>
+    </div>
+    <button class="confirm-btn" onclick="selectPlan(${i})">はい、この旅に決める</button>
+    <button class="confirm-btn" style="background:transparent;color:var(--ink);border:1px solid var(--ink);margin-top:10px;" onclick="openModal(${i})">戻る</button>
+  `;
+}
+function closeModal(){ document.getElementById('overlay').classList.remove('active'); }
+
+function buildMailto(p){
+  const subject = `【古希御祝】ご旅行のご予約が確定しました — ${p.place}`;
+  const body = notifyMessageBody(p);
+  return `mailto:${encodeURIComponent(NOTIFY_TO_EMAIL)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+function notifyMessageBody(p){
+  const lines = [
+    "尚子様が旅を選ばれました。",
+    "",
+    `行き先: ${p.place} — ${p.title}`,
+    `日程: ${selectedTrip ? selectedTrip.label : "(未選択)"}`,
+    "",
+    "【確定した旅程(二泊三日)】",
+    ...p.days.map((d,idx)=>{
+      let dateStr = '';
+      if (selectedTrip){
+        const dt = new Date(selectedTrip.start);
+        dt.setDate(dt.getDate() + idx);
+        dateStr = ` (${shortJPDate(dt)})`;
+      }
+      const cleanText = d.text.replace(/<[^>]+>/g, '');
+      return `${d.label}${dateStr}: ${cleanText}`;
+    }),
+    "",
+    `— ${NOTIFY_FROM_NAME}より`
+  ];
+  return lines.join("\n");
+}
+
+function selectPlan(i){
+  const p = PLANS[i];
+  closeModal();
+  const ticket = document.getElementById('ticketContent');
+  ticket.innerHTML = `
+    <button class="close" onclick="closeTicket()">×</button>
+    <div class="label">CONFIRMED</div>
+    <h3 class="mincho">${p.place} — ${p.title}</h3>
+    <div class="sub">尚子様の古希御祝 御旅行・${selectedTrip ? selectedTrip.label : '二泊三日'}</div>
+    <div class="stamp-wrap"><div class="stamp" id="stamp">
+      <div class="rings">
+        <div class="ring-outer"></div>
+        <div class="ring-inner"></div>
+        <div class="grain"></div>
+      </div>
+      <div class="kanji">確定</div>
+    </div></div>
+    <div class="itinerary-summary">${dayRowsHtml(p.days)}</div>
+    <div class="msg">
+      <strong style="display:block;font-family:'Shippori Mincho',serif;margin-bottom:8px;">尚子様へ</strong>
+      このたびは${p.place}をお選びいただき、ありがとうございます。あとは実際の日程を相談して、一緒に予約するだけです。楽しみにしていてください。
+    </div>
+    <div class="email-hint" id="notifyStatus" style="margin-bottom:14px;">ご連絡を送信しています…</div>
+    <a class="email-btn" href="${buildMailto(p)}">念のため、自分のメールアプリでも送る</a>
+    <div class="email-hint">通知が届かない場合はこちらをタップしてください。</div>
+  `;
+  document.getElementById('ticketOverlay').classList.add('active');
+  const stamp = document.getElementById('stamp');
+  requestAnimationFrame(()=> stamp.classList.add('stamp-in'));
+
+  const statusEl = document.getElementById('notifyStatus');
+  if (emailjsReady){
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      to_email: NOTIFY_TO_EMAIL,
+      from_name: NOTIFY_FROM_NAME,
+      subject: `【古希御祝】ご旅行のご予約が確定しました — ${p.place}`,
+      message: notifyMessageBody(p)
+    }).then(()=>{
+      if(statusEl) statusEl.textContent = "ご連絡を送信しました。";
+    }).catch((err)=>{
+      console.warn("EmailJS send failed:", err);
+      if(statusEl) statusEl.textContent = "自動送信できませんでした。下のボタンからお送りください。";
+    });
+  } else {
+    if(statusEl) statusEl.textContent = "";
+  }
+}
+function closeTicket(){ document.getElementById('ticketOverlay').classList.remove('active'); }
+
+document.getElementById('overlay').addEventListener('click', (e)=>{ if(e.target.id==='overlay') closeModal(); });
+document.getElementById('ticketOverlay').addEventListener('click', (e)=>{ if(e.target.id==='ticketOverlay') closeTicket(); });
+</script>
+
+</body>
+</html>
