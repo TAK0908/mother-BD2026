@@ -79,6 +79,9 @@
     opacity:0; transform:translateY(-24px);
   }
   @keyframes textDrop{ from{opacity:0; transform:translateY(-24px);} to{opacity:1; transform:translateY(0);} }
+  #letterNextBtn{ opacity:0; }
+  #letterNextBtn.fade-in{ animation:fadeInSimple 1.4s ease forwards; }
+  @keyframes fadeInSimple{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
   .hero.reveal .invite-no{ animation:textDrop 2.2s cubic-bezier(.16,.84,.44,1) forwards 0s; }
   .hero.reveal .koki-badge{ animation:textDrop 2.2s cubic-bezier(.16,.84,.44,1) forwards 1.2s; }
   .hero.reveal h1{ animation:textDrop 2.4s cubic-bezier(.16,.84,.44,1) forwards 2.6s; }
@@ -86,16 +89,14 @@
   .hero.reveal .lead{ animation:textDrop 2.4s cubic-bezier(.16,.84,.44,1) forwards 5.8s; }
 
   .letter{
-    max-width:680px; margin:-40px auto 0; background:var(--washi);
-    border:1px solid var(--line); padding:40px 36px; position:relative; z-index:2;
-    box-shadow:0 20px 40px rgba(28,43,51,0.08);
+    max-width:680px; margin:0 auto; background:#12191E;
+    padding:44px 36px 48px; position:relative; z-index:2;
   }
-  .letter p{ margin:0 0 14px; font-size:15px; opacity:0; transform:translateY(-20px); }
-  .letter .sign{ text-align:right; font-family:'Shippori Mincho', serif; margin-top:20px; font-size:15px; }
+  .letter p{ margin:0 0 14px; font-size:15px; opacity:0; transform:translateY(-20px); color:#CBD3D8; }
+  .letter .sign{ text-align:right; font-family:'Shippori Mincho', serif; margin-top:20px; font-size:15px; color:var(--gold); }
   .letter.reveal p:nth-of-type(1){ animation:textDrop 2s cubic-bezier(.16,.84,.44,1) forwards 8.4s; }
-  .letter.reveal p:nth-of-type(2){ animation:textDrop 2s cubic-bezier(.16,.84,.44,1) forwards 9.8s; }
-  .letter.reveal p:nth-of-type(3){ animation:textDrop 2.2s cubic-bezier(.16,.84,.44,1) forwards 11.2s; }
-  .letter.reveal p:nth-of-type(4){ animation:textDrop 2s cubic-bezier(.16,.84,.44,1) forwards 13.0s; }
+  .letter.reveal p:nth-of-type(2){ animation:textDrop 2.2s cubic-bezier(.16,.84,.44,1) forwards 9.8s; }
+  .letter.reveal p:nth-of-type(3){ animation:textDrop 2s cubic-bezier(.16,.84,.44,1) forwards 11.4s; }
 
   .section-head{ text-align:center; max-width:560px; margin:88px auto 40px; padding:0 20px; }
   .section-head .eyebrow{ font-size:12px; letter-spacing:0.3em; color:var(--gold); margin-bottom:10px; }
@@ -107,7 +108,81 @@
     display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:28px;
   }
 
-  .date-picker{ max-width:480px; margin:0 auto 20px; padding:0 24px; }
+  .milkyway-wrap{ max-width:480px; margin:0 auto; padding:0 24px 60px; }
+  .milkyway-card .card-art{ height:220px; }
+  .milkyway-card h3{ line-height:1.5; }
+  #milkywaySection{
+    background: radial-gradient(ellipse at 50% -10%, #2E4057 0%, var(--ink) 55%, #12191E 100%);
+    padding-top:56px;
+  }
+  #milkywaySection .section-head{ margin:0 auto 32px; }
+  #milkywaySection .section-head .eyebrow{ color:var(--gold); opacity:0; transform:translateY(-20px); }
+  #milkywaySection .section-head h2{ color:var(--washi); opacity:0; transform:translateY(-26px); }
+  #milkywaySection .section-head p{ color:#B9C2C8; opacity:0; transform:translateY(-18px); }
+  #milkywaySection.reveal .section-head .eyebrow{ animation:textDrop 1.4s cubic-bezier(.16,.84,.44,1) forwards 0s; }
+  #milkywaySection.reveal .section-head h2{ animation:textDrop 1.7s cubic-bezier(.16,.84,.44,1) forwards .6s; }
+  #milkywaySection.reveal .section-head p{ animation:textDrop 1.5s cubic-bezier(.16,.84,.44,1) forwards 1.3s; }
+  #milkywaySection .milkyway-wrap{ opacity:0; transform:translateY(16px); }
+  #milkywaySection.reveal .milkyway-wrap{ animation:fadeInSimple 1.3s ease forwards 2s; }
+  .milkyway-btn-row{ display:flex; flex-direction:column; gap:10px; }
+
+  #tripTeaser .invite-no{ opacity:0; transform:translateY(-20px); }
+  #tripTeaser h2{ opacity:0; transform:translateY(-26px); }
+  #tripTeaser .milkyway-btn-row{ opacity:0; transform:translateY(10px); }
+  #tripTeaser.reveal .invite-no{ animation:textDrop 1.4s cubic-bezier(.16,.84,.44,1) forwards 0s; }
+  #tripTeaser.reveal h2{ animation:textDrop 1.7s cubic-bezier(.16,.84,.44,1) forwards .7s; }
+  #tripTeaser.reveal .milkyway-btn-row{ animation:fadeInSimple 1.1s ease forwards 2.6s; }
+  .cta-decline{
+    width:100%; padding:13px; background:transparent; color:#8a949a; border:1px solid var(--line);
+    font-family:'Noto Sans JP', sans-serif; font-size:13px; letter-spacing:.08em; cursor:pointer;
+    transition:background .25s ease, color .25s ease;
+  }
+  .cta-decline:hover{ background:#f0ece0; color:#5b6a72; }
+
+  .travel-frame{
+    position:relative; width:80vw; max-width:340px; height:min(70vw,440px);
+    border:1px solid var(--gold-soft); border-radius:4px; overflow:hidden;
+    box-shadow:0 30px 60px rgba(0,0,0,0.5);
+    margin:0 auto;
+  }
+  .travel-frame::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    border:1px solid rgba(245,239,225,0.25);
+    margin:6px;
+  }
+  .travel-slide{
+    position:absolute; inset:0; opacity:0;
+    transition:opacity 1.6s ease;
+  }
+  .travel-slide img{
+    width:100%; height:100%; object-fit:cover; display:block;
+    transform:scale(1.0) translate(0,0);
+    transition:transform var(--pan-duration, 3400ms) ease-out;
+  }
+  .travel-slide.active{ opacity:1; }
+  .travel-slide.active img{ transform:scale(1.2) translate(-2.5%,-2%); }
+  .travel-slide:nth-child(even).active img{ transform:scale(1.2) translate(2.5%,2%); }
+  .travel-slide-label{
+    position:absolute; left:0; right:0; bottom:0; padding:18px 20px 16px;
+    background:linear-gradient(0deg, rgba(18,25,30,0.88) 0%, rgba(18,25,30,0) 100%);
+    color:var(--washi); font-size:16px; letter-spacing:.18em; text-align:left;
+  }
+
+  .travel-caption{
+    text-align:center; margin-bottom:26px; color:var(--washi); font-size:17px; letter-spacing:.15em;
+    opacity:0; transition:opacity 1s ease; min-height:1.6em; padding:0 24px;
+  }
+  .travel-caption.show{ opacity:1; }
+  .travel-skip{
+    text-align:center; margin-top:26px; opacity:0;
+  }
+  .travel-skip button{
+    background:none; border:none; color:#8a949a; font-size:12px; letter-spacing:.1em;
+    cursor:pointer; font-family:'Noto Sans JP', sans-serif;
+  }
+  .travel-skip.show{ animation:fadeInSimple 1s ease forwards; }
+
+  .date-picker{ max-width:480px; margin:0 auto 120px; padding:0 24px; }
   .date-picker-inner{
     background:#fff; border:1px solid var(--line); padding:32px 28px; text-align:center;
   }
@@ -166,7 +241,10 @@
   }
   .card .cta:hover{ background:var(--ink); color:var(--washi); }
 
-  footer{ text-align:center; padding:40px 20px 60px; font-size:12px; color:#8a949a; letter-spacing:0.05em; }
+  footer{
+    text-align:center; padding:44px 20px 60px; font-size:12px; color:#8a949a; letter-spacing:0.05em;
+    background:#12191E; margin-top:0;
+  }
 
   .overlay{
     position:fixed; inset:0; background:rgba(18,25,30,0.7);
@@ -187,6 +265,12 @@
     line-height:1; z-index:3;
   }
   .modal-body{ padding:26px 32px 0; }
+  .back-link{
+    display:inline-block; background:none; border:none; color:#8a949a; font-size:12px;
+    letter-spacing:.05em; margin-bottom:14px; padding:0; cursor:pointer;
+    font-family:'Noto Sans JP', sans-serif;
+  }
+  .back-link:hover{ color:var(--ink); }
   .modal h3{ font-family:'Shippori Mincho', serif; font-size:22px; margin:0 0 4px;}
   .modal .place{ color:var(--vermilion); font-size:12px; letter-spacing:.08em; margin-bottom:16px;}
   .modal .desc{ font-size:13.5px; color:#495459; margin-bottom:18px;}
@@ -210,6 +294,11 @@
     cursor:pointer; transition:background .25s ease; display:block;
   }
   .confirm-btn:hover{ background:#0f171c; }
+
+  .confirm-step .place{ opacity:0; transform:translateY(-16px); animation:textDrop 1.1s cubic-bezier(.16,.84,.44,1) forwards 0s; }
+  .confirm-step h3{ opacity:0; transform:translateY(-18px); animation:textDrop 1.3s cubic-bezier(.16,.84,.44,1) forwards .4s; }
+  .confirm-step .desc{ opacity:0; transform:translateY(-16px); animation:textDrop 1.3s cubic-bezier(.16,.84,.44,1) forwards .95s; }
+  .confirm-step-btns{ opacity:0; animation:fadeInSimple 1.1s ease forwards 1.9s; }
 
   .ticket-overlay{
     position:fixed; inset:0; background:rgba(18,25,30,0.82);
@@ -295,12 +384,14 @@
     display:flex; align-items:center; justify-content:center;
     color:#8a949a; font-size:13px; padding:24px; box-sizing:border-box;
   }
-  .video-gate .gate-next{
-    max-width:280px; background:var(--washi); color:var(--ink); border:none;
+  .gate-next{
+    max-width:280px; width:100%; background:var(--washi); color:var(--ink); border:none;
     padding:14px 30px; font-family:'Noto Sans JP', sans-serif; font-size:14px;
     letter-spacing:.1em; cursor:pointer; transition:opacity .2s ease;
   }
-  .video-gate .gate-next:hover{ opacity:.85; }
+  .gate-next:hover{ opacity:.85; }
+  #gateNextBtn{ opacity:0; pointer-events:none; transition:opacity 1s ease; margin-top:26px; }
+  #gateNextBtn.show{ opacity:1; pointer-events:auto; }
 
   .ticket .itinerary-summary .day-row{ margin-bottom:8px; }
   .ticket .msg{ font-size:13.5px; color:#495459; text-align:left; margin-bottom:22px;}
@@ -340,31 +431,77 @@
 
 <section class="hero">
   <div class="invite-no">御 招 待 状 &nbsp;No. 070</div>
-  <div class="koki-badge"><span class="dot"></span>古希御祝 &nbsp;COMMEMORATIVE JOURNEY&nbsp;<span class="dot"></span></div>
+  <div class="koki-badge"><span class="dot"></span>古希御祝 &nbsp;A GIFT FOR YOU&nbsp;<span class="dot"></span></div>
   <h1 class="mincho">尚子 様</h1>
-  <div class="sub">古希、まことにおめでとうございます</div>
-  <p class="lead">この度は、古希のお祝いに素敵な時間を贈りたいと思います。</p>
+  <div class="sub">お誕生日おめでとうございます</div>
+  <p class="lead">古希、まことにおめでとうございます。</p>
 </section>
 
 <div class="letter">
-  <p>尚子様</p>
   <p>古希という大きな節目を迎えられたこと、心よりお祝い申し上げます。</p>
-  <p>いつも本当にありがとう。<br>この度は、古希のお祝いに素敵な時間を贈りたいと思います。<br>都合のいい日程と行き先を、どうぞご自身で選んでください。</p>
+  <p>いつも本当にありがとう。<br>日頃の感謝を込めて、心ばかりの贈り物をご用意しました。<br>お気に召しますものを、どうぞお選びください。</p>
   <p class="sign">— 隆行・恵里香より</p>
+  <button class="gate-next" id="letterNextBtn" style="margin:28px auto 0;display:none;">次へ →</button>
 </div>
 
-<div class="section-head">
+<div id="milkywaySection" style="display:none;">
+  <div class="section-head">
+    <div class="eyebrow mincho">SUMMER LIMITED GIFT</div>
+    <h2 class="mincho">-宇宙- から<br>夏限定の贈り物</h2>
+    <p>ご自宅から、ドアツードアでお楽しみいただけます。</p>
+  </div>
+  <div class="milkyway-wrap">
+    <div class="card milkyway-card">
+      <div class="card-art">
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Delicate_Milky_Way_(17168205053).jpg?width=900" alt="天の川">
+      </div>
+      <div class="card-body">
+        <div class="place">蔵王 ・ 標高1300m</div>
+        <h3 class="mincho">夏の夜のドライブ<br>〜天の川を求めて〜</h3>
+        <p class="desc">ご自宅の玄関からドアツードアで、蔵王の標高1300m地点まで隆行が運転します。街の灯りから離れた夜空で、肉眼の天の川をご覧いただく特別な体験です。</p>
+        <ul>
+          <li>日時: 新月に近い、晴天の夜(当日の空模様を見て決行)</li>
+          <li>送迎: ご自宅からドアツードア、隆行が運転</li>
+        </ul>
+        <div class="milkyway-btn-row">
+          <button class="cta-primary" id="milkywayClaimBtn">権利を獲得する →</button>
+          <button class="cta-decline" id="milkywayDeclineBtn">辞退する</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="video-gate" id="tripTeaser" style="display:none;">
+  <div class="invite-no">御 招 待 状 &nbsp;No. 070</div>
+  <h2 class="mincho" style="line-height:1.6;">もうひとつの贈り物を<br>獲得しますか?</h2>
+  <div class="milkyway-btn-row" style="max-width:280px; margin-top:10px;">
+    <button class="gate-next" id="tripAcceptBtn">獲得する</button>
+    <button class="cta-decline" id="tripDeclineBtn" style="color:#B9C2C8;border-color:rgba(245,239,225,.3);">辞退する</button>
+  </div>
+</div>
+
+<div class="video-gate" id="travelAnimOverlay" style="display:none;">
+  <div class="travel-caption mincho" id="travelCaption">選べる旅の、ほんの一部を。</div>
+  <div class="travel-frame">
+    <div class="travel-slides" id="travelSlides"></div>
+  </div>
+  <div class="travel-skip" id="travelSkip"><button id="travelSkipBtn">スキップ →</button></div>
+</div>
+
+<div class="section-head" id="step1Head" style="display:none;">
   <div class="eyebrow mincho">STEP 1</div>
-  <h2 class="mincho">まず、日程を選ぶ</h2>
-  <p>二泊三日でご用意しています。出発日を選んでください。</p>
+  <h2 class="mincho">まずは出発の日程から</h2>
+  <p>旅程は二泊三日にてご用意しています。<br>日数の増減に関しては、直接ご相談ください。</p>
 </div>
 
-<div class="date-picker" id="datePicker">
+<div class="date-picker" id="datePicker" style="display:none;">
   <div class="date-picker-inner">
     <label for="tripStart">出発日</label>
     <input type="date" id="tripStart">
     <div class="date-range" id="dateRange">出発日を選ぶと、帰着日が自動で表示されます。</div>
     <button class="cta-primary" id="dateNextBtn" disabled>この日程で行き先を選ぶ →</button>
+    <button class="back-link" id="dateSkipBtn" style="display:block;margin:16px auto 0;">日程は後で決める →</button>
   </div>
 </div>
 
@@ -386,6 +523,29 @@
   <div class="ticket" id="ticketContent"></div>
 </div>
 
+<div class="ticket-overlay" id="milkywayTicketOverlay">
+  <div class="ticket">
+    <button class="close" onclick="closeMilkywayTicket()">×</button>
+    <div class="label">CONFIRMED</div>
+    <h3 class="mincho">夏の夜のドライブ</h3>
+    <div class="sub">〜天の川を求めて〜</div>
+    <div class="stamp-wrap"><div class="stamp" id="milkywayStamp">
+      <div class="rings">
+        <div class="ring-outer"></div>
+        <div class="ring-inner"></div>
+        <div class="grain"></div>
+      </div>
+      <div class="kanji">獲得</div>
+    </div></div>
+    <div class="msg">
+      <strong style="display:block;font-family:'Shippori Mincho',serif;margin-bottom:8px;">尚子様へ</strong>
+      蔵王の標高1300mで、肉眼の天の川をご覧いただけます。運転は隆行が担当します。<br><br>
+      日時は、新月に近い晴天の夜を選んで、後日ご相談のうえ決行します。
+    </div>
+    <button class="confirm-btn" onclick="proceedToStep1()">次へ →</button>
+  </div>
+</div>
+
 <script>
 /* ===== 動画ゲート ===== */
 const videoGate = document.getElementById('videoGate');
@@ -403,7 +563,12 @@ function showMissingVideo(){
   if (videoOk) return;
   letterVideo.style.display = 'none';
   videoMissingNote.style.display = 'flex';
+  gateNextBtn.classList.add('show');
 }
+
+letterVideo.addEventListener('ended', ()=>{
+  gateNextBtn.classList.add('show');
+});
 
 gateNextBtn.addEventListener('click', ()=>{
   try{ letterVideo.pause(); }catch(e){}
@@ -413,6 +578,142 @@ gateNextBtn.addEventListener('click', ()=>{
     document.querySelector('.hero').classList.add('reveal');
     document.querySelector('.letter').classList.add('reveal');
   }, 200);
+  setTimeout(()=>{
+    const btn = document.getElementById('letterNextBtn');
+    btn.style.display = 'block';
+    btn.classList.add('fade-in');
+  }, 13800);
+});
+
+document.getElementById('letterNextBtn').addEventListener('click', ()=>{
+  document.getElementById('letterNextBtn').style.display = 'none';
+  const mw = document.getElementById('milkywaySection');
+  mw.style.display = '';
+  mw.scrollIntoView({behavior:'smooth', block:'start'});
+  setTimeout(()=>{ mw.classList.add('reveal'); }, 150);
+});
+
+document.getElementById('milkywayClaimBtn').addEventListener('click', ()=>{
+  document.getElementById('milkywayTicketOverlay').classList.add('active');
+  const stamp = document.getElementById('milkywayStamp');
+  requestAnimationFrame(()=> stamp.classList.add('stamp-in'));
+  if (emailjsReady){
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      to_email: NOTIFY_TO_EMAIL,
+      from_name: NOTIFY_FROM_NAME,
+      subject: "【古希御祝】天の川鑑賞ツアーの権利を獲得されました",
+      message: `尚子様が「夏の夜のドライブ〜天の川を求めて〜」の権利を獲得されました。\n\n— ${NOTIFY_FROM_NAME}より`
+    }).catch((err)=>{ console.warn("EmailJS send failed:", err); });
+  }
+});
+
+document.getElementById('milkywayDeclineBtn').addEventListener('click', ()=>{
+  document.getElementById('milkywaySection').style.display = 'none';
+  showTripTeaser();
+});
+
+function closeMilkywayTicket(){
+  document.getElementById('milkywayTicketOverlay').classList.remove('active');
+}
+
+function proceedToStep1(){
+  closeMilkywayTicket();
+  document.getElementById('milkywaySection').style.display = 'none';
+  showTripTeaser();
+}
+
+function showTripTeaser(){
+  const teaser = document.getElementById('tripTeaser');
+  teaser.classList.remove('reveal');
+  teaser.style.display = 'flex';
+  teaser.scrollIntoView({behavior:'instant', block:'start'});
+  void teaser.offsetWidth;
+  teaser.classList.add('reveal');
+}
+
+let TRAVEL_SLIDES = [];
+const SLIDE_DURATION = 2600; // ms each slide stays active
+const TRAVEL_CAPTIONS = [
+  "日々の忙しさと喧騒を忘れ",
+  "すばらしい日本の文化に触れる",
+  "身も心も癒されますように"
+];
+
+function buildTravelSlides(){
+  TRAVEL_SLIDES = PLANS.map(p => ({ img: p.img, label: p.place }));
+  const container = document.getElementById('travelSlides');
+  container.style.setProperty('--pan-duration', (SLIDE_DURATION + 900) + 'ms');
+  container.innerHTML = TRAVEL_SLIDES.map(s => `
+    <div class="travel-slide" style="--pan-duration:${SLIDE_DURATION + 900}ms;">
+      <img src="${s.img}" alt="${s.label}">
+      <div class="travel-slide-label mincho">${s.label}</div>
+    </div>
+  `).join('');
+}
+let travelTimers = [];
+function playTravelMontage(onDone){
+  const slides = document.querySelectorAll('#travelSlides .travel-slide');
+  slides.forEach(s => s.classList.remove('active'));
+  travelTimers.forEach(t => clearTimeout(t));
+  travelTimers = [];
+
+  slides.forEach((slide, i)=>{
+    const t = setTimeout(()=>{
+      slides.forEach(s => s.classList.remove('active'));
+      slide.classList.add('active');
+    }, i * SLIDE_DURATION);
+    travelTimers.push(t);
+  });
+
+  const total = TRAVEL_SLIDES.length * SLIDE_DURATION + 600;
+
+  const captionEl = document.getElementById('travelCaption');
+  captionEl.classList.remove('show');
+  captionEl.textContent = '';
+  const captionSlot = total / TRAVEL_CAPTIONS.length;
+  TRAVEL_CAPTIONS.forEach((text, i)=>{
+    const showTimer = setTimeout(()=>{
+      captionEl.classList.remove('show');
+      setTimeout(()=>{ captionEl.textContent = text; captionEl.classList.add('show'); }, 500);
+    }, i * captionSlot + (i === 0 ? 200 : 0));
+    travelTimers.push(showTimer);
+  });
+
+  const doneTimer = setTimeout(()=>{ if (onDone) onDone(); }, total);
+  travelTimers.push(doneTimer);
+
+  const skip = document.getElementById('travelSkip');
+  skip.classList.remove('show');
+  const skipShowTimer = setTimeout(()=>{ skip.classList.add('show'); }, 3500);
+  travelTimers.push(skipShowTimer);
+}
+
+function finishTravelMontage(){
+  travelTimers.forEach(t => clearTimeout(t));
+  travelTimers = [];
+  document.getElementById('travelAnimOverlay').style.display = 'none';
+  document.getElementById('step1Head').style.display = '';
+  document.getElementById('datePicker').style.display = '';
+  document.getElementById('step1Head').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+document.getElementById('travelSkipBtn').addEventListener('click', finishTravelMontage);
+
+document.getElementById('tripAcceptBtn').addEventListener('click', ()=>{
+  document.getElementById('tripTeaser').style.display = 'none';
+  const overlay = document.getElementById('travelAnimOverlay');
+  overlay.style.display = 'flex';
+  overlay.classList.remove('play');
+  void overlay.offsetWidth;
+  overlay.classList.add('play');
+  playTravelMontage(finishTravelMontage);
+});
+
+document.getElementById('tripDeclineBtn').addEventListener('click', ()=>{
+  document.getElementById('tripTeaser').style.display = 'none';
+  document.getElementById('step1Head').style.display = '';
+  document.getElementById('datePicker').style.display = '';
+  document.getElementById('step1Head').scrollIntoView({behavior:'smooth', block:'start'});
 });
 
 let selectedTrip = null; // {startStr, endStr, label}
@@ -442,6 +743,14 @@ tripStartInput.addEventListener('change', ()=>{
 
 dateNextBtn.addEventListener('click', ()=>{
   document.getElementById('chosenDateLabel').textContent = selectedTrip.label;
+  document.getElementById('step2Head').style.display = '';
+  document.getElementById('plans').style.display = '';
+  document.getElementById('step2Head').scrollIntoView({behavior:'smooth', block:'start'});
+});
+
+document.getElementById('dateSkipBtn').addEventListener('click', ()=>{
+  selectedTrip = null;
+  document.getElementById('chosenDateLabel').textContent = '日程は追って調整';
   document.getElementById('step2Head').style.display = '';
   document.getElementById('plans').style.display = '';
   document.getElementById('step2Head').scrollIntoView({behavior:'smooth', block:'start'});
@@ -659,6 +968,8 @@ PLANS.forEach((p, i)=>{
   plansEl.appendChild(card);
 });
 
+buildTravelSlides();
+
 function shortJPDate(d){
   const w = ["日","月","火","水","木","金","土"][d.getDay()];
   return `${d.getMonth()+1}月${d.getDate()}日(${w})`;
@@ -685,15 +996,17 @@ function openModal(i){
       <img src="${p.img}" alt="${p.place}">
     </div>
     <div class="modal-body">
+      <button class="back-link" onclick="closeModal()">← 一覧に戻る</button>
       <div class="place">${p.place}</div>
       <h3 class="mincho">${p.title}</h3>
       <p class="desc">${p.desc}</p>
       <div class="itinerary-block">
-        <span class="duration">二泊三日 ・ ${selectedTrip ? selectedTrip.label : ''}</span>
+        <span class="duration">二泊三日${selectedTrip ? ' ・ ' + selectedTrip.label : ''}</span>
         ${dayRowsHtml(p.days)}
       </div>
     </div>
     <button class="confirm-btn" onclick="showConfirmStep(${i})">この旅を選ぶ</button>
+    <button class="back-link" onclick="closeModal()" style="display:block;margin:14px auto 24px;">← 一覧に戻る</button>
   `;
   document.getElementById('overlay').classList.add('active');
 }
@@ -702,13 +1015,15 @@ function showConfirmStep(i){
   const p = PLANS[i];
   const modal = document.getElementById('modalContent');
   modal.innerHTML = `
-    <div class="modal-body" style="padding-top:32px;">
+    <div class="modal-body confirm-step" style="padding-top:32px;">
       <div class="place">${p.place}</div>
       <h3 class="mincho">${p.title}</h3>
       <p class="desc" style="margin-top:14px;">${selectedTrip ? selectedTrip.label : ''}<br>このプランで決定してよろしいですか?</p>
     </div>
-    <button class="confirm-btn" onclick="selectPlan(${i})">はい、この旅に決める</button>
-    <button class="confirm-btn" style="background:transparent;color:var(--ink);border:1px solid var(--ink);margin-top:10px;" onclick="openModal(${i})">戻る</button>
+    <div class="confirm-step-btns">
+      <button class="confirm-btn" onclick="selectPlan(${i})">はい、この旅に決める</button>
+      <button class="confirm-btn" style="background:transparent;color:var(--ink);border:1px solid var(--ink);margin-top:10px;" onclick="openModal(${i})">戻る</button>
+    </div>
   `;
 }
 function closeModal(){ document.getElementById('overlay').classList.remove('active'); }
