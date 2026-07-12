@@ -182,6 +182,28 @@
   }
   .travel-skip.show{ animation:fadeInSimple 1s ease forwards; }
 
+  .video-gate.self-destruct{
+    background: radial-gradient(ellipse at 50% -10%, #4a1414 0%, #1c0d0d 55%, #0c0606 100%);
+  }
+  .sd-icon{ font-size:44px; margin-bottom:10px; animation:sdPulse 1s ease-in-out infinite; }
+  @keyframes sdPulse{ 0%,100%{ transform:scale(1); opacity:1; } 50%{ transform:scale(1.12); opacity:.75; } }
+  .sd-title{ color:var(--washi); font-size:22px; letter-spacing:.1em; margin-bottom:6px; }
+  .sd-sub{ color:#e0a7a7; font-size:13px; letter-spacing:.15em; margin-bottom:22px; }
+  .sd-count{
+    font-family:'Shippori Mincho', serif; font-size:76px; color:#e2483f; font-weight:700;
+    letter-spacing:.05em; margin-bottom:18px; text-shadow:0 0 24px rgba(226,72,63,0.6);
+    animation:sdPulse 1s ease-in-out infinite;
+  }
+  .sd-note{ color:#8a949a; font-size:12px; letter-spacing:.08em; }
+  #selfDestructOverlay.shake{ animation:sdShake .4s ease; }
+  @keyframes sdShake{
+    0%,100%{ transform:translateX(0); }
+    20%{ transform:translateX(-6px); }
+    40%{ transform:translateX(6px); }
+    60%{ transform:translateX(-4px); }
+    80%{ transform:translateX(4px); }
+  }
+
   .date-picker{ max-width:480px; margin:0 auto 120px; padding:0 24px; }
   .date-picker-inner{
     background:#fff; border:1px solid var(--line); padding:32px 28px; text-align:center;
@@ -489,6 +511,22 @@
   <div class="travel-skip" id="travelSkip"><button id="travelSkipBtn">スキップ →</button></div>
 </div>
 
+<div class="video-gate self-destruct" id="selfDestructOverlay" style="display:none;">
+  <div id="sdWarning">
+    <div class="sd-icon">⚠</div>
+    <div class="sd-title mincho">辞退、了解しました。</div>
+    <div class="sd-sub">自爆プログラムを起動します</div>
+    <div class="sd-count" id="sdCount">10</div>
+    <div class="sd-note">このメッセージは制限時間内に消去されます</div>
+  </div>
+  <div id="sdJoke" style="display:none;">
+    <div class="sd-icon">😂</div>
+    <div class="sd-title mincho">なんてね。</div>
+    <div class="sd-sub">息子たちからの贈り物は、<br>素直に受け取るように。</div>
+    <button class="gate-next" id="sdContinueBtn" style="margin-top:26px;">戻る →</button>
+  </div>
+</div>
+
 <div class="section-head" id="step1Head" style="display:none;">
   <div class="eyebrow mincho">STEP 1</div>
   <h2 class="mincho">まずは出発の日程から</h2>
@@ -607,9 +645,40 @@ document.getElementById('milkywayClaimBtn').addEventListener('click', ()=>{
   }
 });
 
+function triggerSelfDestruct(onContinue){
+  const overlay = document.getElementById('selfDestructOverlay');
+  const warning = document.getElementById('sdWarning');
+  const joke = document.getElementById('sdJoke');
+  const countEl = document.getElementById('sdCount');
+  warning.style.display = '';
+  joke.style.display = 'none';
+  overlay.style.display = 'flex';
+
+  let count = 10;
+  countEl.textContent = count;
+  const interval = setInterval(()=>{
+    count--;
+    countEl.textContent = count;
+    overlay.classList.remove('shake');
+    void overlay.offsetWidth;
+    overlay.classList.add('shake');
+    if (count <= 0){
+      clearInterval(interval);
+      warning.style.display = 'none';
+      joke.style.display = '';
+    }
+  }, 1000);
+
+  document.getElementById('sdContinueBtn').onclick = ()=>{
+    overlay.style.display = 'none';
+    if (onContinue) onContinue();
+  };
+}
+
 document.getElementById('milkywayDeclineBtn').addEventListener('click', ()=>{
-  document.getElementById('milkywaySection').style.display = 'none';
-  showTripTeaser();
+  triggerSelfDestruct(()=>{
+    document.getElementById('milkywaySection').scrollIntoView({behavior:'smooth', block:'start'});
+  });
 });
 
 function closeMilkywayTicket(){
@@ -710,10 +779,9 @@ document.getElementById('tripAcceptBtn').addEventListener('click', ()=>{
 });
 
 document.getElementById('tripDeclineBtn').addEventListener('click', ()=>{
-  document.getElementById('tripTeaser').style.display = 'none';
-  document.getElementById('step1Head').style.display = '';
-  document.getElementById('datePicker').style.display = '';
-  document.getElementById('step1Head').scrollIntoView({behavior:'smooth', block:'start'});
+  triggerSelfDestruct(()=>{
+    document.getElementById('tripTeaser').scrollIntoView({behavior:'instant', block:'start'});
+  });
 });
 
 let selectedTrip = null; // {startStr, endStr, label}
