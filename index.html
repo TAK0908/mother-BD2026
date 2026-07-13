@@ -251,8 +251,6 @@
     letter-spacing:.15em; opacity:0; transition:opacity 1.4s ease;
   }
   .ending-sign.show{ opacity:1; }
-  .ending-close-btn{ opacity:0; transition:opacity 1.2s ease; max-width:200px; }
-  .ending-close-btn.show{ opacity:1; }
 
   .date-picker{ max-width:480px; margin:0 auto 120px; padding:0 24px; }
   .date-picker-inner{
@@ -599,7 +597,6 @@
     <div class="kanji">寿</div>
   </div>
   <div class="ending-sign mincho" id="endingSign">— 隆行・恵里香より</div>
-  <button class="gate-next ending-close-btn" id="endingCloseBtn" style="display:none;margin-top:30px;">閉じる</button>
 </div>
 
 <div class="section-head" id="step1Head" style="display:none;">
@@ -621,7 +618,7 @@
 <div class="section-head" id="step2Head" style="display:none;">
   <div class="eyebrow mincho">STEP 2 · <span id="chosenDateLabel"></span></div>
   <h2 class="mincho">行き先を選ぶ</h2>
-  <p>温泉とやすらぎ、歴史とまち歩き — 十五の行き先、<br>もしくは自由にご希望をお聞かせください。</p>
+  <p>温泉とやすらぎ、歴史とまち歩き — 二十の行き先、<br>もしくは自由にご希望をお聞かせください。</p>
 </div>
 
 <div class="plans" id="plans" style="display:none;"></div>
@@ -1085,6 +1082,61 @@ const PLANS = [
       {label:"2日目", text:"<strong>午前:</strong>河口湖畔の大石公園を散策。<strong>午後:</strong>忍野八海や河口湖オルゴールの森を訪れる。<strong>夜:</strong>宿の露天風呂でゆったり過ごす。"},
       {label:"3日目", text:"<strong>午前:</strong>富岳風穴・鳴沢氷穴を見学。<strong>午後:</strong>お土産選び。<strong>夜:</strong>仙台へ帰路。"}
     ]
+  },
+  {
+    no:"16", place:"熱海温泉・静岡", title:"海を望む湯とレトロな港町",
+    desc:"相模灘を見下ろす高台の温泉宿と、レトロな雰囲気が残る港町の散策を楽しむ、海辺の湯の旅。",
+    points:["熱海海岸・親水公園", "熱海城・レトロな町並み", "来宮神社(大楠)参拝", "海を望む温泉宿"],
+    img:"https://commons.wikimedia.org/wiki/Special:FilePath/Atami_from_the_mountain_top,_Atami,_Shizuoka,_Japan.JPG?width=900",
+    days:[
+      {label:"1日目", text:"<strong>午前:</strong>仙台より新幹線で移動。<strong>午後:</strong>熱海海岸・親水公園を散策し、レトロな商店街を歩く。<strong>夜:</strong>海を望む高台の温泉宿にチェックインし、海の幸と温泉を楽しむ。"},
+      {label:"2日目", text:"<strong>午前:</strong>来宮神社の大楠を参拝。<strong>午後:</strong>熱海城やMOA美術館をめぐる。<strong>夜:</strong>宿の露天風呂から夜景を眺める。"},
+      {label:"3日目", text:"<strong>午前:</strong>糸川遊歩道を散策。<strong>午後:</strong>お土産選び。<strong>夜:</strong>仙台へ帰路。"}
+    ]
+  },
+  {
+    no:"17", place:"有馬温泉・兵庫", title:"日本三古湯、金泉銀泉の旅",
+    desc:"清少納言も愛した日本最古級の名湯。金泉・銀泉の異なる二つの湯と、坂の町の風情を楽しむ旅。",
+    points:["金の湯・銀の湯めぐり", "有馬本街道の坂道散策", "六甲山からの絶景", "老舗旅館での湯治"],
+    img:"https://commons.wikimedia.org/wiki/Special:FilePath/Kinnoyu_Public_Bathing_in_Arima_Onsen.JPG?width=900",
+    days:[
+      {label:"1日目", text:"<strong>午前:</strong>仙台より移動。<strong>午後:</strong>有馬温泉に到着し、坂の町並みを散策。<strong>夜:</strong>老舗旅館にチェックインし、金泉・銀泉の湯を楽しむ。"},
+      {label:"2日目", text:"<strong>午前:</strong>六甲山・六甲有馬ロープウェーから絶景を望む。<strong>午後:</strong>金の湯・銀の湯(外湯)をめぐる。<strong>夜:</strong>宿で炭酸せんべい作り体験と温泉。"},
+      {label:"3日目", text:"<strong>午前:</strong>有馬本街道でお土産選び。<strong>午後:</strong>のんびり過ごす。<strong>夜:</strong>仙台へ帰路。"}
+    ]
+  },
+  {
+    no:"18", place:"伊勢志摩・三重", title:"お伊勢参りと海の幸の旅",
+    desc:"一生に一度は、と言われるお伊勢参り。神宮参拝と志摩の海の幸、真珠の海をめぐる旅。",
+    points:["伊勢神宮(内宮・外宮)参拝", "おかげ横丁で食べ歩き", "志摩の海の幸", "英虞湾クルーズ"],
+    img:"https://commons.wikimedia.org/wiki/Special:FilePath/Naiku_Ise-jingu_Grand_Shrine_01.JPG?width=900",
+    days:[
+      {label:"1日目", text:"<strong>午前:</strong>仙台より移動。<strong>午後:</strong>伊勢神宮の外宮・内宮を参拝し、おかげ横丁を食べ歩き。<strong>夜:</strong>宿にチェックインし、伊勢海老や松阪牛など海山の幸を味わう。"},
+      {label:"2日目", text:"<strong>午前:</strong>志摩に移動し、英虞湾クルーズで真珠養殖いかだの景色を楽しむ。<strong>午後:</strong>ミキモト真珠島を見学。<strong>夜:</strong>宿の温泉でゆったり過ごす。"},
+      {label:"3日目", text:"<strong>午前:</strong>二見興玉神社・夫婦岩を参拝。<strong>午後:</strong>お土産選び。<strong>夜:</strong>仙台へ帰路。"}
+    ]
+  },
+  {
+    no:"19", place:"萩・山口", title:"幕末の志士を生んだ城下町",
+    desc:"白壁と夏みかんの香る城下町。幕末の志士たちを生んだ萩の町並みと、伝統の萩焼に触れる旅。",
+    points:["萩城下町(江戸屋横丁など)散策", "松下村塾(世界遺産)見学", "萩焼の窯元めぐり", "指月公園・萩城跡"],
+    img:"https://commons.wikimedia.org/wiki/Special:FilePath/Hagi-shi_Sasanamiichi,_Yamaguchi,_post_town.JPG?width=900",
+    days:[
+      {label:"1日目", text:"<strong>午前:</strong>仙台より移動。<strong>午後:</strong>萩城下町の白壁の通りを散策し、夏みかんが実る町並みを楽しむ。<strong>夜:</strong>宿にチェックインし、萩の郷土料理を味わう。"},
+      {label:"2日目", text:"<strong>午前:</strong>世界遺産・松下村塾と松陰神社を見学。<strong>午後:</strong>萩焼の窯元をめぐり、器選びを楽しむ。<strong>夜:</strong>宿でゆったり過ごす。"},
+      {label:"3日目", text:"<strong>午前:</strong>指月公園・萩城跡を散策。<strong>午後:</strong>お土産選び。<strong>夜:</strong>仙台へ帰路。"}
+    ]
+  },
+  {
+    no:"20", place:"倉敷・岡山", title:"白壁の町並みと美術の旅",
+    desc:"柳並木と白壁の蔵屋敷が水路に映る、美観地区の町並みを歩く。西洋美術にも触れる、大人の街歩き旅。",
+    points:["倉敷美観地区 散策", "大原美術館 鑑賞", "川舟流し", "白壁の蔵屋敷でお茶"],
+    img:"https://commons.wikimedia.org/wiki/Special:FilePath/Japan_Kurashiki_warehouses_3_048.jpg?width=900",
+    days:[
+      {label:"1日目", text:"<strong>午前:</strong>仙台より移動。<strong>午後:</strong>倉敷美観地区を散策し、柳並木と白壁の蔵屋敷が水路に映る町並みを楽しむ。<strong>夜:</strong>宿にチェックインし、瀬戸内の魚介料理を味わう。"},
+      {label:"2日目", text:"<strong>午前:</strong>大原美術館で西洋美術を鑑賞。<strong>午後:</strong>川舟流しに乗り、水路からの景色を楽しむ。<strong>夜:</strong>宿でゆったり過ごす。"},
+      {label:"3日目", text:"<strong>午前:</strong>白壁の蔵屋敷カフェでひと休み。<strong>午後:</strong>お土産選び。<strong>夜:</strong>仙台へ帰路。"}
+    ]
   }
 ];
 
@@ -1115,7 +1167,7 @@ const customCard = document.createElement('div');
 customCard.className = 'card';
 customCard.innerHTML = `
   <div class="card-art custom-card-art">
-    <span class="art-no">PLAN 16</span>
+    <span class="art-no">PLAN 21</span>
     <div class="custom-icon">✎</div>
   </div>
   <div class="card-body">
@@ -1403,22 +1455,13 @@ function showEndingSequence(){
     sealEl.classList.add('stamp-in');
     const t4 = setTimeout(()=>{
       signEl.classList.add('show');
-      const closeBtn = document.getElementById('endingCloseBtn');
-      closeBtn.style.display = 'block';
-      requestAnimationFrame(()=> closeBtn.classList.add('show'));
     }, 700);
     endingTimers.push(t4);
   }, delay);
   endingTimers.push(t3);
 }
 
-document.getElementById('endingCloseBtn').addEventListener('click', ()=>{
-  window.close();
-  setTimeout(()=>{
-    document.getElementById('endingCloseBtn').textContent = 'このタブを閉じてください';
-    document.getElementById('endingCloseBtn').disabled = true;
-  }, 400);
-});
+
 
 
 document.getElementById('overlay').addEventListener('click', (e)=>{ if(e.target.id==='overlay') closeModal(); });
