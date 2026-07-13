@@ -204,6 +204,56 @@
     80%{ transform:translateX(4px); }
   }
 
+  .ending-overlay{
+    background: radial-gradient(ellipse at 50% 45%, #2E4057 0%, var(--ink) 55%, #0c0606 100%);
+    opacity:0; transition:opacity 2.2s ease; z-index:300;
+  }
+  .ending-overlay.show{ opacity:1; }
+  .ending-particles{ position:absolute; inset:0; overflow:hidden; pointer-events:none; }
+  .ending-particle{
+    position:absolute; bottom:-6%; width:4px; height:4px; border-radius:50%;
+    background:var(--gold); opacity:0; box-shadow:0 0 8px 2px rgba(176,141,87,0.6);
+    animation:emberFloat linear infinite;
+  }
+  @keyframes emberFloat{
+    0%{ transform:translateY(0) translateX(0); opacity:0; }
+    10%{ opacity:.8; }
+    90%{ opacity:.5; }
+    100%{ transform:translateY(-110vh) translateX(var(--drift, 20px)); opacity:0; }
+  }
+  .ending-text{
+    position:relative; z-index:2; color:var(--washi); font-size:clamp(19px,4vw,27px);
+    text-align:center; letter-spacing:.06em; line-height:1.9; max-width:88vw;
+    opacity:0; transition:opacity 1.2s ease; min-height:2.4em; padding:0 16px;
+    word-break:keep-all; overflow-wrap:break-word;
+  }
+  .ending-text.show{ opacity:1; }
+  .ending-seal{
+    position:relative; z-index:2; width:190px; height:190px; margin-top:34px;
+    color:var(--gold); opacity:0; transform:scale(1.8) rotate(-10deg);
+  }
+  .ending-seal .ring-outer{ position:absolute; inset:0; border-radius:50%; border:8px solid var(--gold); }
+  .ending-seal .ring-inner{ position:absolute; inset:15px; border-radius:50%; border:2.5px solid var(--gold); }
+  .ending-seal .kanji{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:'Shippori Mincho', serif; font-weight:700; font-size:64px; color:var(--gold);
+  }
+  .ending-seal .grain{
+    position:absolute; inset:0; border-radius:50%;
+    background:
+      radial-gradient(circle at 22% 25%, rgba(255,255,255,0.4) 0, transparent 26%),
+      radial-gradient(circle at 78% 70%, rgba(255,255,255,0.3) 0, transparent 22%);
+    mix-blend-mode:screen;
+  }
+  .ending-seal.stamp-in{ animation:stampSlam .6s cubic-bezier(.2,1.4,.4,1) forwards; }
+  .ending-sign{
+    position:relative; z-index:2; margin-top:22px; color:#CBD3D8; font-size:14px;
+    letter-spacing:.15em; opacity:0; transition:opacity 1.4s ease;
+  }
+  .ending-sign.show{ opacity:1; }
+  .ending-close-btn{ opacity:0; transition:opacity 1.2s ease; max-width:200px; }
+  .ending-close-btn.show{ opacity:1; }
+
   .date-picker{ max-width:480px; margin:0 auto 120px; padding:0 24px; }
   .date-picker-inner{
     background:#fff; border:1px solid var(--line); padding:32px 28px; text-align:center;
@@ -253,6 +303,16 @@
   .card h3{ font-size:20px; margin:0 0 6px; font-family:'Shippori Mincho', serif; font-weight:600; }
   .card .place{ font-size:12px; color:var(--vermilion); letter-spacing:0.08em; margin-bottom:14px;}
   .card .desc{ font-size:13.5px; color:#495459; margin-bottom:16px; flex:1;}
+  .custom-card-art{
+    display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(160deg, var(--washi-dark), var(--washi));
+  }
+  .custom-icon{ font-size:44px; color:var(--gold); }
+  .custom-textarea{
+    width:100%; min-height:120px; margin-top:6px; padding:12px 14px;
+    border:1px solid var(--line); background:var(--washi); font-family:'Noto Sans JP', sans-serif;
+    font-size:14px; color:var(--ink); resize:vertical; box-sizing:border-box;
+  }
   .card ul{ list-style:none; padding:0; margin:0 0 20px; font-size:12.5px; color:#5b6a72;}
   .card li{ padding-left:14px; position:relative; margin-bottom:6px;}
   .card li::before{ content:"·"; position:absolute; left:0; color:var(--gold);}
@@ -527,6 +587,21 @@
   </div>
 </div>
 
+<div class="video-gate ending-overlay" id="endingOverlay" style="display:none;">
+  <div class="ending-particles" id="endingParticles"></div>
+  <div class="ending-text mincho" id="endingText"></div>
+  <div class="ending-seal" id="endingSeal">
+    <div class="rings">
+      <div class="ring-outer"></div>
+      <div class="ring-inner"></div>
+      <div class="grain"></div>
+    </div>
+    <div class="kanji">寿</div>
+  </div>
+  <div class="ending-sign mincho" id="endingSign">— 隆行・恵里香より</div>
+  <button class="gate-next ending-close-btn" id="endingCloseBtn" style="display:none;margin-top:30px;">閉じる</button>
+</div>
+
 <div class="section-head" id="step1Head" style="display:none;">
   <div class="eyebrow mincho">STEP 1</div>
   <h2 class="mincho">まずは出発の日程から</h2>
@@ -546,7 +621,7 @@
 <div class="section-head" id="step2Head" style="display:none;">
   <div class="eyebrow mincho">STEP 2 · <span id="chosenDateLabel"></span></div>
   <h2 class="mincho">行き先を選ぶ</h2>
-  <p>温泉とやすらぎ、歴史とまち歩き — 十五の行き先をご覧ください。</p>
+  <p>温泉とやすらぎ、歴史とまち歩き — 十五の行き先、<br>もしくは自由にご希望をお聞かせください。</p>
 </div>
 
 <div class="plans" id="plans" style="display:none;"></div>
@@ -709,7 +784,7 @@ const TRAVEL_CAPTIONS = [
 ];
 
 function buildTravelSlides(){
-  TRAVEL_SLIDES = PLANS.map(p => ({ img: p.img, label: p.place }));
+  TRAVEL_SLIDES = PLANS.filter((p,i)=> i % 2 === 0).map(p => ({ img: p.img, label: p.place }));
   const container = document.getElementById('travelSlides');
   container.style.setProperty('--pan-duration', (SLIDE_DURATION + 900) + 'ms');
   container.innerHTML = TRAVEL_SLIDES.map(s => `
@@ -1036,6 +1111,87 @@ PLANS.forEach((p, i)=>{
   plansEl.appendChild(card);
 });
 
+const customCard = document.createElement('div');
+customCard.className = 'card';
+customCard.innerHTML = `
+  <div class="card-art custom-card-art">
+    <span class="art-no">PLAN 16</span>
+    <div class="custom-icon">✎</div>
+  </div>
+  <div class="card-body">
+    <div class="place">その他</div>
+    <h3 class="mincho">ご希望をお聞かせください</h3>
+    <p class="desc">行きたい場所や、してみたいこと。この中になければ、自由に教えてください。</p>
+    <ul><li>思いつくまま、一言で構いません</li></ul>
+    <button class="cta" id="customPlanBtn">希望を伝える</button>
+  </div>
+`;
+customCard.querySelector('.cta').addEventListener('click', (e)=>{ e.stopPropagation(); openCustomModal(); });
+customCard.addEventListener('click', ()=>openCustomModal());
+plansEl.appendChild(customCard);
+
+function openCustomModal(){
+  const modal = document.getElementById('modalContent');
+  modal.innerHTML = `
+    <div class="modal-body" style="padding-top:32px;">
+      <button class="back-link" onclick="closeModal()">← 一覧に戻る</button>
+      <div class="place">その他</div>
+      <h3 class="mincho">ご希望をお聞かせください</h3>
+      <p class="desc">行きたい場所や、してみたいこと。決まった形はありませんので、自由に書いてください。</p>
+      <textarea id="customRequestText" class="custom-textarea" placeholder="例: 紅葉がきれいな時期に、近場でのんびりしたい　など"></textarea>
+    </div>
+    <button class="confirm-btn" id="customSubmitBtn">この内容を伝える</button>
+  `;
+  document.getElementById('overlay').classList.add('active');
+  document.getElementById('customSubmitBtn').addEventListener('click', submitCustomRequest);
+}
+
+function submitCustomRequest(){
+  const text = document.getElementById('customRequestText').value.trim();
+  if (!text){
+    document.getElementById('customRequestText').focus();
+    return;
+  }
+  closeModal();
+  const ticket = document.getElementById('ticketContent');
+  ticket.innerHTML = `
+    <button class="close" onclick="closeTicket()">×</button>
+    <div class="label">CONFIRMED</div>
+    <h3 class="mincho">ご希望を承りました</h3>
+    <div class="sub">尚子様の古希御祝</div>
+    <div class="stamp-wrap"><div class="stamp" id="customStamp">
+      <div class="rings">
+        <div class="ring-outer"></div>
+        <div class="ring-inner"></div>
+        <div class="grain"></div>
+      </div>
+      <div class="kanji">承知</div>
+    </div></div>
+    <div class="msg">
+      <strong style="display:block;font-family:'Shippori Mincho',serif;margin-bottom:8px;">尚子様へ</strong>
+      「${text.replace(/</g,'&lt;')}」とのこと、承りました。<br><br>
+      相談しながら、一緒に形にしていきましょう。
+    </div>
+  `;
+  document.getElementById('ticketOverlay').classList.add('active');
+  const stamp = document.getElementById('customStamp');
+  requestAnimationFrame(()=> stamp.classList.add('stamp-in'));
+
+  if (emailjsReady){
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      to_email: NOTIFY_TO_EMAIL,
+      from_name: NOTIFY_FROM_NAME,
+      subject: "【古希御祝】ご希望のメッセージが届きました",
+      message: `尚子様からご希望が届きました。\n\n「${text}」\n\n— ${NOTIFY_FROM_NAME}より`
+    }).catch((err)=>{ console.warn("EmailJS send failed:", err); });
+  }
+
+  setTimeout(()=>{
+    document.getElementById('ticketOverlay').classList.remove('active');
+    showEndingSequence();
+  }, 15000);
+}
+
 buildTravelSlides();
 
 function shortJPDate(d){
@@ -1172,8 +1328,98 @@ function selectPlan(i){
   } else {
     if(statusEl) statusEl.textContent = "";
   }
+
+  setTimeout(()=>{
+    document.getElementById('ticketOverlay').classList.remove('active');
+    showEndingSequence();
+  }, 15000);
 }
-function closeTicket(){ document.getElementById('ticketOverlay').classList.remove('active'); }
+function closeTicket(){
+  document.getElementById('ticketOverlay').classList.remove('active');
+}
+
+const ENDING_LINES = [
+  "尚子様",
+  "お誕生日、そして古希<br>誠におめでとうございます",
+  "これからもその明るさで<br>元気に過ごしてね！",
+  "そして皆の成長を<br>そばで見守っていてください！",
+  "人生、これから<br>楽しみましょう！",
+  "今日は本当に<br>おめでとうございます！"
+];
+
+function buildEndingParticles(){
+  const container = document.getElementById('endingParticles');
+  if (container.children.length) return;
+  const count = 26;
+  for (let i = 0; i < count; i++){
+    const p = document.createElement('div');
+    p.className = 'ending-particle';
+    const left = Math.random() * 100;
+    const duration = 6 + Math.random() * 6;
+    const delay = Math.random() * 8;
+    const drift = (Math.random() * 60 - 30) + 'px';
+    p.style.left = left + '%';
+    p.style.animationDuration = duration + 's';
+    p.style.animationDelay = delay + 's';
+    p.style.setProperty('--drift', drift);
+    container.appendChild(p);
+  }
+}
+
+let endingTimers = [];
+function showEndingSequence(){
+  const overlay = document.getElementById('endingOverlay');
+  const textEl = document.getElementById('endingText');
+  const sealEl = document.getElementById('endingSeal');
+  const signEl = document.getElementById('endingSign');
+
+  endingTimers.forEach(t => clearTimeout(t));
+  endingTimers = [];
+
+  buildEndingParticles();
+  overlay.style.display = 'flex';
+  overlay.classList.remove('show');
+  textEl.classList.remove('show');
+  textEl.innerHTML = '';
+  sealEl.classList.remove('stamp-in');
+  signEl.classList.remove('show');
+
+  void overlay.offsetWidth;
+  overlay.classList.add('show');
+
+  let delay = 1800;
+  ENDING_LINES.forEach((line)=>{
+    const t1 = setTimeout(()=>{
+      textEl.classList.remove('show');
+      const t2 = setTimeout(()=>{ textEl.innerHTML = line; textEl.classList.add('show'); }, 500);
+      endingTimers.push(t2);
+    }, delay);
+    endingTimers.push(t1);
+    delay += 3400;
+  });
+
+  const t3 = setTimeout(()=>{
+    textEl.classList.remove('show');
+    sealEl.classList.add('stamp-in');
+    const t4 = setTimeout(()=>{
+      signEl.classList.add('show');
+      const closeBtn = document.getElementById('endingCloseBtn');
+      closeBtn.style.display = 'block';
+      requestAnimationFrame(()=> closeBtn.classList.add('show'));
+    }, 700);
+    endingTimers.push(t4);
+  }, delay);
+  endingTimers.push(t3);
+}
+
+document.getElementById('endingCloseBtn').addEventListener('click', ()=>{
+  window.close();
+  setTimeout(()=>{
+    document.getElementById('endingCloseBtn').textContent = 'このタブを閉じてください';
+    document.getElementById('endingCloseBtn').disabled = true;
+  }, 400);
+});
+
 
 document.getElementById('overlay').addEventListener('click', (e)=>{ if(e.target.id==='overlay') closeModal(); });
 document.getElementById('ticketOverlay').addEventListener('click', (e)=>{ if(e.target.id==='ticketOverlay') closeTicket(); });
