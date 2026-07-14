@@ -473,6 +473,36 @@
   #gateNextBtn{ opacity:0; pointer-events:none; transition:opacity 1s ease; margin-top:26px; }
   #gateNextBtn.show{ opacity:1; pointer-events:auto; }
 
+  .gift-prompt{
+    opacity:0; transform:scale(0.85); text-align:center;
+    transition:opacity 1.8s ease, transform 1.8s cubic-bezier(.2,1.2,.3,1);
+    position:relative; z-index:3;
+  }
+  .gift-prompt.show{ opacity:1; transform:scale(1); }
+  .gift-prompt-text{
+    color:var(--washi); font-size:26px; letter-spacing:.15em; line-height:1.7; margin-bottom:4px;
+  }
+
+  #letterVideo, #videoGateTitle, #videoMissingNote{
+    transition:opacity 2.2s ease;
+    opacity:1;
+  }
+  #letterVideo.fade-out, #videoGateTitle.fade-out, #videoMissingNote.fade-out{
+    opacity:0;
+  }
+
+  .gift-sparkles{ position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:2; }
+  .gift-sparkle{
+    position:absolute; top:-6%; opacity:0; color:var(--gold); font-size:16px;
+    animation:sparkleFall linear forwards;
+  }
+  @keyframes sparkleFall{
+    0%{ transform:translateY(0) rotate(0deg); opacity:0; }
+    12%{ opacity:1; }
+    85%{ opacity:.9; }
+    100%{ transform:translateY(112vh) rotate(200deg); opacity:0; }
+  }
+
   .ticket .itinerary-summary .day-row{ margin-bottom:8px; }
   .ticket .msg{ font-size:13.5px; color:#495459; text-align:left; margin-bottom:22px;}
   .email-btn{
@@ -499,14 +529,21 @@
 
 <div class="video-gate" id="videoGate">
   <div class="invite-no">御 招 待 状 &nbsp;No. 070</div>
-  <h2 class="mincho">尚子様へ</h2>
+  <h2 class="mincho" id="videoGateTitle">尚子様へ</h2>
   <video id="letterVideo" controls playsinline>
     <source src="video/message.mp4" type="video/mp4">
   </video>
   <div class="video-missing" id="videoMissingNote" style="display:none;">
     (ここに、お祝いの動画メッセージが入ります)
   </div>
-  <button class="gate-next" id="gateNextBtn">はじめる →</button>
+  <div class="gift-sparkles" id="giftSparkles"></div>
+  <div class="gift-prompt" id="giftPrompt" style="display:none;">
+    <div class="gift-prompt-text mincho">贈り物を<br>受け取りますか?</div>
+    <div class="milkyway-btn-row" style="max-width:260px;margin-top:8px;">
+      <button class="gate-next" id="giftYesBtn">はい</button>
+      <button class="cta-decline" id="giftNoBtn" style="color:#B9C2C8;border-color:rgba(245,239,225,.3);">いいえ</button>
+    </div>
+  </div>
 </div>
 
 <section class="hero">
@@ -661,7 +698,8 @@
 const videoGate = document.getElementById('videoGate');
 const letterVideo = document.getElementById('letterVideo');
 const videoMissingNote = document.getElementById('videoMissingNote');
-const gateNextBtn = document.getElementById('gateNextBtn');
+const giftPrompt = document.getElementById('giftPrompt');
+const videoGateTitle = document.getElementById('videoGateTitle');
 
 let videoOk = false;
 letterVideo.addEventListener('loadeddata', ()=>{ videoOk = true; });
@@ -671,16 +709,58 @@ setTimeout(()=>{ if(!videoOk && letterVideo.readyState === 0) showMissingVideo()
 
 function showMissingVideo(){
   if (videoOk) return;
-  letterVideo.style.display = 'none';
   videoMissingNote.style.display = 'flex';
-  gateNextBtn.classList.add('show');
+  beginGateTransition();
 }
 
 letterVideo.addEventListener('ended', ()=>{
-  gateNextBtn.classList.add('show');
+  beginGateTransition();
 });
 
-gateNextBtn.addEventListener('click', ()=>{
+function beginGateTransition(){
+  letterVideo.classList.add('fade-out');
+  videoGateTitle.classList.add('fade-out');
+  videoMissingNote.classList.add('fade-out');
+  setTimeout(()=>{
+    letterVideo.style.display = 'none';
+    videoMissingNote.style.display = 'none';
+    videoGateTitle.style.display = 'none';
+    showGiftPrompt();
+  }, 2200);
+}
+
+function spawnGiftSparkles(){
+  const container = document.getElementById('giftSparkles');
+  container.innerHTML = '';
+  const chars = ['✦','✧','⋆','✩'];
+  const count = 30;
+  for (let i = 0; i < count; i++){
+    const s = document.createElement('div');
+    s.className = 'gift-sparkle';
+    s.textContent = chars[Math.floor(Math.random() * chars.length)];
+    const left = Math.random() * 100;
+    const duration = 3 + Math.random() * 3;
+    const delay = Math.random() * 2.5;
+    const size = 10 + Math.random() * 14;
+    s.style.left = left + '%';
+    s.style.fontSize = size + 'px';
+    s.style.animationDuration = duration + 's';
+    s.style.animationDelay = delay + 's';
+    container.appendChild(s);
+  }
+}
+
+function showGiftPrompt(){
+  spawnGiftSparkles();
+  giftPrompt.style.display = 'block';
+  giftPrompt.classList.remove('show');
+  setTimeout(()=>{
+    void giftPrompt.offsetWidth;
+    giftPrompt.classList.add('show');
+  }, 2400);
+}
+
+function proceedFromGate(){
   try{ letterVideo.pause(); }catch(e){}
   videoGate.classList.add('hidden');
   setTimeout(()=>{ videoGate.style.display = 'none'; }, 650);
@@ -693,6 +773,12 @@ gateNextBtn.addEventListener('click', ()=>{
     btn.style.display = 'block';
     btn.classList.add('fade-in');
   }, 13800);
+}
+
+document.getElementById('giftYesBtn').addEventListener('click', proceedFromGate);
+
+document.getElementById('giftNoBtn').addEventListener('click', ()=>{
+  triggerSelfDestruct(()=>{ showGiftPrompt(); });
 });
 
 document.getElementById('letterNextBtn').addEventListener('click', ()=>{
@@ -1393,10 +1479,10 @@ function closeTicket(){
 const ENDING_LINES = [
   "尚子様",
   "お誕生日、そして古希<br>誠におめでとうございます",
-  "これからもその明るさで<br>元気に過ごしてね！",
-  "そして皆の成長を<br>そばで見守っていてください！",
-  "人生、これから<br>楽しみましょう！",
-  "今日は本当に<br>おめでとうございます！"
+  "これからもその明るさで<br>元気に過ごしてね",
+  "そして皆の成長を<br>そばで見守っていてください",
+  "人生、これから<br>楽しみましょう",
+  "今日は本当に<br>おめでとうございます"
 ];
 
 function buildEndingParticles(){
