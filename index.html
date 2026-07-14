@@ -251,6 +251,8 @@
     letter-spacing:.15em; opacity:0; transition:opacity 1.4s ease;
   }
   .ending-sign.show{ opacity:1; }
+  .ending-close-btn{ opacity:0; transition:opacity 1.2s ease; max-width:200px; }
+  .ending-close-btn.show{ opacity:1; }
 
   .date-picker{ max-width:480px; margin:0 auto 120px; padding:0 24px; }
   .date-picker-inner{
@@ -449,6 +451,7 @@
     overflow-y:auto;
   }
   .video-gate.hidden{ opacity:0; pointer-events:none; }
+  #travelAnimOverlay{ transition:opacity 1.6s ease; }
   .video-gate .invite-no{ margin-bottom:14px; flex-shrink:0; }
   .video-gate h2{
     font-family:'Shippori Mincho', serif; font-size:clamp(22px,4vw,30px);
@@ -492,6 +495,15 @@
   }
 
   .gift-sparkles{ position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:2; }
+  #bgmToggle{
+    position:fixed; top:14px; right:14px; z-index:500;
+    width:38px; height:38px; border-radius:50%; border:1px solid var(--gold-soft);
+    background:rgba(28,43,51,0.55); color:var(--washi); font-size:16px; cursor:pointer;
+    opacity:0; transition:opacity 1.2s ease;
+    display:flex; align-items:center; justify-content:center; padding:0;
+  }
+  #bgmToggle.show{ opacity:1; }
+
   .gift-sparkle{
     position:absolute; top:-6%; opacity:0; color:var(--gold); font-size:16px;
     animation:sparkleFall linear forwards;
@@ -526,6 +538,11 @@
     <feDisplacementMap in="SourceGraphic" in2="noise" scale="7"/>
   </filter>
 </svg>
+
+<audio id="bgmAudio" loop preload="auto">
+  <source src="https://commons.wikimedia.org/wiki/Special:FilePath/Pachelbel's_Canon.ogg" type="audio/ogg">
+</audio>
+<button id="bgmToggle" style="display:none;">🔊</button>
 
 <div class="video-gate" id="videoGate">
   <div class="invite-no">御 招 待 状 &nbsp;No. 070</div>
@@ -634,6 +651,7 @@
     <div class="kanji">寿</div>
   </div>
   <div class="ending-sign mincho" id="endingSign">— 隆行・恵里香より</div>
+  <button class="gate-next ending-close-btn" id="endingCloseBtn" style="display:none;margin-top:30px;">閉じる</button>
 </div>
 
 <div class="section-head" id="step1Head" style="display:none;">
@@ -787,6 +805,33 @@ document.getElementById('letterNextBtn').addEventListener('click', ()=>{
   mw.style.display = '';
   mw.scrollIntoView({behavior:'smooth', block:'start'});
   setTimeout(()=>{ mw.classList.add('reveal'); }, 150);
+  startBgm();
+});
+
+function startBgm(){
+  const audio = document.getElementById('bgmAudio');
+  const toggleBtn = document.getElementById('bgmToggle');
+  audio.volume = 0;
+  const playPromise = audio.play();
+  if (playPromise) {
+    playPromise.then(()=>{
+      toggleBtn.style.display = 'flex';
+      requestAnimationFrame(()=> toggleBtn.classList.add('show'));
+      let v = 0;
+      const fade = setInterval(()=>{
+        v += 0.04;
+        if (v >= 0.5){ v = 0.5; clearInterval(fade); }
+        audio.volume = v;
+      }, 200);
+    }).catch((err)=>{ console.warn('BGM play failed:', err); });
+  }
+}
+
+document.getElementById('bgmToggle').addEventListener('click', ()=>{
+  const audio = document.getElementById('bgmAudio');
+  const btn = document.getElementById('bgmToggle');
+  audio.muted = !audio.muted;
+  btn.textContent = audio.muted ? '🔇' : '🔊';
 });
 
 document.getElementById('milkywayClaimBtn').addEventListener('click', ()=>{
@@ -884,15 +929,17 @@ function playTravelMontage(onDone){
   travelTimers.forEach(t => clearTimeout(t));
   travelTimers = [];
 
+  const slideStartDelay = 2000; // 最初は文字だけ、2秒後に写真スタート
+
   slides.forEach((slide, i)=>{
     const t = setTimeout(()=>{
       slides.forEach(s => s.classList.remove('active'));
       slide.classList.add('active');
-    }, i * SLIDE_DURATION);
+    }, slideStartDelay + i * SLIDE_DURATION);
     travelTimers.push(t);
   });
 
-  const total = TRAVEL_SLIDES.length * SLIDE_DURATION + 600;
+  const total = slideStartDelay + TRAVEL_SLIDES.length * SLIDE_DURATION + 600;
 
   const captionEl = document.getElementById('travelCaption');
   captionEl.classList.remove('show');
@@ -902,7 +949,7 @@ function playTravelMontage(onDone){
     const showTimer = setTimeout(()=>{
       captionEl.classList.remove('show');
       setTimeout(()=>{ captionEl.textContent = text; captionEl.classList.add('show'); }, 500);
-    }, i * captionSlot + (i === 0 ? 200 : 0));
+    }, i * captionSlot + (i === 0 ? 300 : 0));
     travelTimers.push(showTimer);
   });
 
@@ -930,8 +977,10 @@ document.getElementById('tripAcceptBtn').addEventListener('click', ()=>{
   document.getElementById('tripTeaser').style.display = 'none';
   const overlay = document.getElementById('travelAnimOverlay');
   overlay.style.display = 'flex';
+  overlay.classList.add('hidden');
   overlay.classList.remove('play');
   void overlay.offsetWidth;
+  overlay.classList.remove('hidden');
   overlay.classList.add('play');
   playTravelMontage(finishTravelMontage);
 });
@@ -1541,11 +1590,22 @@ function showEndingSequence(){
     sealEl.classList.add('stamp-in');
     const t4 = setTimeout(()=>{
       signEl.classList.add('show');
+      const closeBtn = document.getElementById('endingCloseBtn');
+      closeBtn.style.display = 'block';
+      requestAnimationFrame(()=> closeBtn.classList.add('show'));
     }, 700);
     endingTimers.push(t4);
   }, delay);
   endingTimers.push(t3);
 }
+
+document.getElementById('endingCloseBtn').addEventListener('click', ()=>{
+  window.close();
+  setTimeout(()=>{
+    document.getElementById('endingCloseBtn').textContent = 'このタブを閉じてください';
+    document.getElementById('endingCloseBtn').disabled = true;
+  }, 400);
+});
 
 
 
